@@ -1,4 +1,4 @@
-package com.mrcrayfish.modid;
+package com.mrcrayfish.enchantable;
 
 import net.minecraftforge.fml.common.Mod;
 
@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.Mod;
  * Author: MrCrayfish
  */
 @Mod(Reference.MOD_ID)
-public class TemplateMod
+public class Enchantable
 {
+
 }
