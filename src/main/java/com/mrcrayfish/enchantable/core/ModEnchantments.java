@@ -1,6 +1,7 @@
 package com.mrcrayfish.enchantable.core;
 
 import com.mrcrayfish.enchantable.Reference;
+import com.mrcrayfish.enchantable.enchantment.IronSkullEnchantment;
 import com.mrcrayfish.enchantable.enchantment.StompingEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraftforge.event.RegistryEvent;
@@ -16,10 +17,12 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModEnchantments
 {
     public static final Enchantment STOMPING = null;
+    public static final Enchantment IRON_SKULL = null;
 
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Enchantment> event)
     {
         event.getRegistry().register(new StompingEnchantment());
+        event.getRegistry().register(new IronSkullEnchantment());
     }
 }

@@ -31,7 +31,7 @@ public class StompingEnchantment extends Enchantment
 {
     public StompingEnchantment()
     {
-        super(Rarity.COMMON, EnchantmentType.ARMOR_FEET, new EquipmentSlotType[]{EquipmentSlotType.FEET});
+        super(Rarity.UNCOMMON, EnchantmentType.ARMOR_FEET, new EquipmentSlotType[]{EquipmentSlotType.FEET});
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "stomping"));
     }
 
