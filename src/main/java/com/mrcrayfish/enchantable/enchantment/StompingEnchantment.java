@@ -14,6 +14,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -21,6 +22,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
@@ -86,6 +89,16 @@ public class StompingEnchantment extends Enchantment
                             event.setAmount(Math.max(0F, fallDamage - fallDamage * strengthFactor));
                             for(LivingEntity livingEntity : entities)
                             {
+                                /* If PVP is not enabled, prevent stomping from damaging players */
+                                if(livingEntity instanceof PlayerEntity)
+                                {
+                                    MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+                                    if(!server.isPVPEnabled())
+                                    {
+                                        continue;
+                                    }
+                                }
+
                                 float distance = livingEntity.getDistance(player);
                                 float distanceFactor = Math.max(0.5F, 1.0F - distance / 5.0F);
                                 livingEntity.attackEntityFrom(DamageSource.GENERIC, fallDamage * strengthFactor * distanceFactor * 2.0F);
