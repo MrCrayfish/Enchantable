@@ -1,0 +1,6 @@
+{
+    "entity.player.stomp": {
+        "subtitle": "subtitle.enchantable.player.stomp",
+        "sounds": [ "enchantable:entity/player/stomp" ]
+    }
+}

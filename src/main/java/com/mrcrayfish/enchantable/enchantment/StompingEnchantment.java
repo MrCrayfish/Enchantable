@@ -2,6 +2,7 @@ package com.mrcrayfish.enchantable.enchantment;
 
 import com.mrcrayfish.enchantable.Reference;
 import com.mrcrayfish.enchantable.core.ModEnchantments;
+import com.mrcrayfish.enchantable.core.ModSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,6 +16,8 @@ import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -90,7 +93,8 @@ public class StompingEnchantment extends Enchantment
                                 {
                                     BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
                                     ServerWorld serverWorld = (ServerWorld) livingEntity.world;
-                                    serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.posX, livingEntity.posY, livingEntity.posZ, 30, 0, 0, 0, (double) 0.15F);
+                                    serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.posX, livingEntity.posY, livingEntity.posZ, 50, 0, 0, 0, (double) 0.15F);
+                                    serverWorld.playSound(null, livingEntity.posX, livingEntity.posY, livingEntity.posZ, ModSounds.ENTITY_PLAYER_STOMP, SoundCategory.PLAYERS, 1.0F, 1.0F);
                                 }
                                 livingEntity.setMotion(0, 0.2, 0);
                                 livingEntity.addVelocity(0, 0.2, 0);

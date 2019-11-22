@@ -1,4 +1,5 @@
 {
     "enchantment.enchantable.stomping": "Stomping",
-    "enchantment.enchantable.iron_skull": "Iron Skull"
+    "enchantment.enchantable.iron_skull": "Iron Skull",
+    "subtitle.enchantable.player.stomp": "Stomp"
 }
