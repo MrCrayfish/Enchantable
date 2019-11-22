@@ -102,6 +102,7 @@ public class StompingEnchantment extends Enchantment
                                 float distance = livingEntity.getDistance(player);
                                 float distanceFactor = Math.max(0.5F, 1.0F - distance / 5.0F);
                                 livingEntity.attackEntityFrom(DamageSource.GENERIC, fallDamage * strengthFactor * distanceFactor * 2.0F);
+                                livingEntity.setRevengeTarget(player);
                                 if(livingEntity.world instanceof ServerWorld)
                                 {
                                     BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
