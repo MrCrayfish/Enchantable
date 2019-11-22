@@ -100,10 +100,6 @@ public class StompingEnchantment extends Enchantment
                                     }
                                 }
 
-                                float distance = livingEntity.getDistance(player);
-                                float distanceFactor = Math.max(0.5F, 1.0F - distance / 5.0F);
-                                livingEntity.attackEntityFrom(DamageSource.GENERIC, fallDamage * strengthFactor * distanceFactor * 2.0F);
-                                livingEntity.setRevengeTarget(player);
                                 if(livingEntity.world instanceof ServerWorld)
                                 {
                                     BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
@@ -118,6 +114,11 @@ public class StompingEnchantment extends Enchantment
                                 livingEntity.setMotion(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.addVelocity(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.velocityChanged = true;
+
+                                float distance = livingEntity.getDistance(player);
+                                float distanceFactor = Math.max(0.5F, 1.0F - distance / 5.0F);
+                                livingEntity.attackEntityFrom(DamageSource.GENERIC, fallDamage * strengthFactor * distanceFactor * 2.0F);
+                                livingEntity.setRevengeTarget(player);
                             }
                             stack.damageItem(entities.size(), player, entity1 -> {
                                 entity1.sendBreakAnimation(EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.FEET.getIndex()));
