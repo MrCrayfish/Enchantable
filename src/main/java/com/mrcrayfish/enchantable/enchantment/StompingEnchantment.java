@@ -19,6 +19,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -112,8 +113,10 @@ public class StompingEnchantment extends Enchantment
                                 }
 
                                 /* Cause the entity to bop up into the air */
-                                livingEntity.setMotion(0, 0.2, 0);
-                                livingEntity.addVelocity(0, 0.2, 0);
+                                double stompStrength = 0.3 * (level / 4.0);
+                                Vec3d direction = new Vec3d(livingEntity.posX - player.posX, 0, livingEntity.posZ - player.posZ).normalize();
+                                livingEntity.setMotion(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
+                                livingEntity.addVelocity(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.velocityChanged = true;
                             }
                             stack.damageItem(entities.size(), player, entity1 -> {
