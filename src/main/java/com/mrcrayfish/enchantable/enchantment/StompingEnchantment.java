@@ -82,12 +82,18 @@ public class StompingEnchantment extends Enchantment
                     {
                         int level = enchantments.get(ModEnchantments.STOMPING);
                         float strengthFactor = 0.8F * (level / 4.0F);
+
+                        /* Finds entities in a five block radius around the player */
                         List<LivingEntity> entities = player.world.getEntitiesWithinAABB(LivingEntity.class, player.getBoundingBox().grow(5, 0, 5), LivingEntity::isAlive);
-                        entities.remove(player);
+                        entities.remove(player); //Remove ourselves as it should apply stomping to the player causing it
+
                         if(entities.size() > 0)
                         {
                             float fallDamage = event.getAmount();
+
+                            /* Reduce the damage of the fall as it has redirected it to the stomped mobs */
                             event.setAmount(Math.max(0F, fallDamage - fallDamage * strengthFactor));
+
                             for(LivingEntity livingEntity : entities)
                             {
                                 /* If PVP is not enabled, prevent stomping from damaging players */
@@ -100,6 +106,7 @@ public class StompingEnchantment extends Enchantment
                                     }
                                 }
 
+                                /* Spawns particles and plays a stomp sound at the location of the living entity */
                                 if(livingEntity.world instanceof ServerWorld)
                                 {
                                     BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
@@ -115,11 +122,14 @@ public class StompingEnchantment extends Enchantment
                                 livingEntity.addVelocity(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.velocityChanged = true;
 
+                                /* Damage is applied last so mobs will still fly into air even when dead. It just looks better! */
                                 float distance = livingEntity.getDistance(player);
                                 float distanceFactor = Math.max(0.5F, 1.0F - distance / 5.0F);
                                 livingEntity.attackEntityFrom(DamageSource.GENERIC, fallDamage * strengthFactor * distanceFactor * 2.0F);
                                 livingEntity.setRevengeTarget(player);
                             }
+
+                            /* Damages boots by the amount of mobs that were stomped */
                             stack.damageItem(entities.size(), player, entity1 -> {
                                 entity1.sendBreakAnimation(EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.FEET.getIndex()));
                             });
