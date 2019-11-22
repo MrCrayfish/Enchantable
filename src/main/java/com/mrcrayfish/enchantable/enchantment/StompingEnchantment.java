@@ -110,11 +110,13 @@ public class StompingEnchantment extends Enchantment
                                     serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.posX, livingEntity.posY, livingEntity.posZ, 50, 0, 0, 0, (double) 0.15F);
                                     serverWorld.playSound(null, livingEntity.posX, livingEntity.posY, livingEntity.posZ, ModSounds.ENTITY_PLAYER_STOMP, SoundCategory.PLAYERS, 1.0F, 1.0F);
                                 }
+
+                                /* Cause the entity to bop up into the air */
                                 livingEntity.setMotion(0, 0.2, 0);
                                 livingEntity.addVelocity(0, 0.2, 0);
                                 livingEntity.velocityChanged = true;
                             }
-                            stack.damageItem(entities.size() * 2, player, entity1 -> {
+                            stack.damageItem(entities.size(), player, entity1 -> {
                                 entity1.sendBreakAnimation(EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.FEET.getIndex()));
                             });
                         }
