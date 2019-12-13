@@ -1,6 +1,6 @@
 function initializeCoreMod() {
 	return {
-		'left_click_event': {
+		'edit_block_event': {
             'target': {
                 'type': 'CLASS',
                 'name': 'net.minecraft.client.multiplayer.PlayerController'
@@ -13,21 +13,17 @@ function initializeCoreMod() {
                     desc: "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/Direction;)Z",
                     patch: patch_PlayerController_clickBlock
                 }, classNode);
-                return classNode;
-            }
-        },
-        'can_player_edit': {
-            'target': {
-                'type': 'CLASS',
-                'name': 'net.minecraft.entity.player.PlayerEntity'
-            },
-            'transformer': function(classNode) {
-                log("Patching PlayerEntity...");
                 patch({
-                    obfName: "func_223729_a",
-                    name: "",
-                    desc: "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/GameType;)Z",
-                    patch: patch_PlayerEntity_canPlayerEdit
+                    obfName: "func_187103_a",
+                    name: "onPlayerDestroyBlock",
+                    desc: "(Lnet/minecraft/util/math/BlockPos;)Z",
+                    patch: patch_PlayerController_onPlayerDestroyBlock
+                }, classNode);
+                patch({
+                    obfName: "func_180512_c",
+                    name: "onPlayerDamageBlock",
+                    desc: "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/Direction;)Z",
+                    patch: patch_PlayerController_onPlayerDamageBlock
                 }, classNode);
                 return classNode;
             }
@@ -74,62 +70,35 @@ var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
 var FrameNode = Java.type('org.objectweb.asm.tree.FrameNode');
 
 function patch_PlayerController_clickBlock(method) {
-    var foundNode = null;
-    var instructions = method.instructions.toArray();
-    var length = instructions.length;
-    for (var i = 0; i < length; i++) {
-        var node = instructions[i];
-        if(node.getOpcode() != Opcodes.INVOKESTATIC)
-            continue;
-        if(!node.name.equals("onLeftClickBlock"))
-            continue;
-        if(node.getNext().getOpcode() != Opcodes.ASTORE)
-            continue;
-        foundNode = node.getNext();
-        break;
-    }
-    if(foundNode !== null) {
-        var label = new LabelNode();
-        method.instructions.insert(foundNode, new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
-        method.instructions.insert(foundNode, label);
-        method.instructions.insert(foundNode, new InsnNode(Opcodes.IRETURN));
-        method.instructions.insert(foundNode, new InsnNode(Opcodes.ICONST_0));
-        method.instructions.insert(foundNode, new JumpInsnNode(Opcodes.IFNE, label));
-        method.instructions.insert(foundNode, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/enchantable/Enchantable", "canLeftClickBlock", "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/Direction;)Z", false));
-        method.instructions.insert(foundNode, new VarInsnNode(Opcodes.ALOAD, 2));
-        method.instructions.insert(foundNode, new VarInsnNode(Opcodes.ALOAD, 1));
-        method.instructions.insert(foundNode, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/Minecraft", ASMAPI.mapField("field_71439_g"), "Lnet/minecraft/client/entity/player/ClientPlayerEntity;"));
-        method.instructions.insert(foundNode, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/multiplayer/PlayerController", ASMAPI.mapField("field_78776_a"), "Lnet/minecraft/client/Minecraft;"));
-        method.instructions.insert(foundNode, new VarInsnNode(Opcodes.ALOAD, 0));
-        return true;
-    }
-    return false;
-}
-
-function patch_PlayerEntity_canPlayerEdit(method) {
-    var label = new LabelNode();
-    method.instructions.insert(new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
-    method.instructions.insert(label);
-    method.instructions.insert(new InsnNode(Opcodes.IRETURN));
-    method.instructions.insert(new InsnNode(Opcodes.ICONST_1));
-    method.instructions.insert(new JumpInsnNode(Opcodes.IFNE, label));
-    method.instructions.insert(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/enchantable/Enchantable", "canEditBlock", "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false));
-    method.instructions.insert(new VarInsnNode(Opcodes.ALOAD, 2));
-    method.instructions.insert(new VarInsnNode(Opcodes.ALOAD, 1));
-    method.instructions.insert(new VarInsnNode(Opcodes.ALOAD, 0));
+    insertEvent(method, method.instructions.get(0));
     return true;
 }
 
-function getNthRelativeNode(node, n) {
-    while(n > 0 && node !== null) {
-        node = node.getNext();
-        n--;
-    }
-    while(n < 0 && node !== null) {
-        node = node.getPrevious();
-        n++;
-    }
-    return node;
+function patch_PlayerController_onPlayerDestroyBlock(method) {
+    insertEvent(method, method.instructions.get(0));
+    return true;
+}
+
+function patch_PlayerController_onPlayerDamageBlock(method) {
+    insertEvent(method, method.instructions.get(0));
+    return true;
+}
+
+function insertEvent(method, firstInsn) {
+    method.instructions.insertBefore(firstInsn, new VarInsnNode(Opcodes.ALOAD, 0));
+    method.instructions.insertBefore(firstInsn, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/multiplayer/PlayerController", ASMAPI.mapField("field_78776_a"), "Lnet/minecraft/client/Minecraft;"));
+    method.instructions.insertBefore(firstInsn, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/Minecraft", ASMAPI.mapField("field_71439_g"), "Lnet/minecraft/client/entity/player/ClientPlayerEntity;"));
+    method.instructions.insertBefore(firstInsn, new VarInsnNode(Opcodes.ALOAD, 0));
+    method.instructions.insertBefore(firstInsn, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/multiplayer/PlayerController", ASMAPI.mapField("field_78776_a"), "Lnet/minecraft/client/Minecraft;"));
+    method.instructions.insertBefore(firstInsn, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/Minecraft", ASMAPI.mapField("field_71441_e"), "Lnet/minecraft/client/world/ClientWorld;"));
+    method.instructions.insertBefore(firstInsn, new VarInsnNode(Opcodes.ALOAD, 1));
+    method.instructions.insertBefore(firstInsn, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/enchantable/Enchantable", "fireEditBlockEvent", "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false));
+    var label = new LabelNode();
+    method.instructions.insertBefore(firstInsn, new JumpInsnNode(Opcodes.IFEQ, label));
+    method.instructions.insertBefore(firstInsn, new InsnNode(Opcodes.ICONST_0));
+    method.instructions.insertBefore(firstInsn, new InsnNode(Opcodes.IRETURN));
+    method.instructions.insertBefore(firstInsn, label);
+    method.instructions.insertBefore(firstInsn, new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
 }
 
 function log(s) {
