@@ -55,6 +55,18 @@ public class StompingEnchantment extends Enchantment
     }
 
     @Override
+    public int getMinEnchantability(int level)
+    {
+        return level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level)
+    {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    @Override
     protected boolean canApplyTogether(Enchantment enchantment)
     {
         if(enchantment instanceof ProtectionEnchantment)

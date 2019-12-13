@@ -44,6 +44,18 @@ public class ReplantingEnchantment extends Enchantment
         return stack.getItem() instanceof HoeItem;
     }
 
+    @Override
+    public int getMinEnchantability(int level)
+    {
+        return 15;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level)
+    {
+        return super.getMinEnchantability(level) + 50;
+    }
+
     @SubscribeEvent
     public static void onPlayerHarvestBlock(BlockEvent.BreakEvent event)
     {

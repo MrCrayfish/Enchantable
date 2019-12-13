@@ -29,6 +29,18 @@ public class IronSkullEnchantment extends Enchantment
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "iron_skull"));
     }
 
+    @Override
+    public int getMinEnchantability(int level)
+    {
+        return 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level)
+    {
+        return this.getMinEnchantability(level) + 30;
+    }
+
     @SubscribeEvent
     public static void onPlayerFallDamage(LivingDamageEvent event)
     {
