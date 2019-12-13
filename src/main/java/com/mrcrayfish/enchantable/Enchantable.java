@@ -50,7 +50,7 @@ public class Enchantable
                 return;
 
             CropsBlock crop = (CropsBlock) state.getBlock();
-            if(state.get(CropsBlock.AGE) != crop.getMaxAge())
+            if(state.get(crop.getAgeProperty()) != crop.getMaxAge())
             {
                 event.setCanceled(true);
             }

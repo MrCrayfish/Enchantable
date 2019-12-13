@@ -57,7 +57,7 @@ public class ReplantingEnchantment extends Enchantment
                 return;
 
             CropsBlock crop = (CropsBlock) event.getState().getBlock();
-            if(event.getState().get(CropsBlock.AGE) != crop.getMaxAge())
+            if(event.getState().get(crop.getAgeProperty()) != crop.getMaxAge())
                 return;
 
             World world = event.getPlayer().getEntityWorld();
@@ -66,7 +66,7 @@ public class ReplantingEnchantment extends Enchantment
             if(stack.getItem() instanceof BlockItem)
             {
                 BlockItem blockItem = (BlockItem) stack.getItem();
-                if(blockItem.getBlock() instanceof IGrowable)
+                if(blockItem.getBlock() instanceof CropsBlock)
                 {
                     ItemStack seeds = ItemStack.EMPTY;
                     List<ItemStack> drops = Block.getDrops(event.getState(), (ServerWorld) world, event.getPos(), null);
