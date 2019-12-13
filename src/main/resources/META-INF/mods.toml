@@ -15,7 +15,7 @@ description="Adds new balanced enchantments that extend improve the vanilla game
 [[dependencies.enchantable]]
     modId="forge"
     mandatory=true
-    versionRange="[28,)"
+    versionRange="[28.1.90,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.enchantable]]
