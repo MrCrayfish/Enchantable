@@ -34,7 +34,7 @@ public class ReplantingEnchantment extends Enchantment
 {
     public ReplantingEnchantment()
     {
-        super(Rarity.UNCOMMON, EnchantmentType.DIGGER, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
+        super(Rarity.RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "replanting"));
     }
 

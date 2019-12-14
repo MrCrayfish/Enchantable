@@ -1,6 +1,7 @@
 package com.mrcrayfish.enchantable.core;
 
 import com.mrcrayfish.enchantable.Reference;
+import com.mrcrayfish.enchantable.enchantment.CultivatorEnchantment;
 import com.mrcrayfish.enchantable.enchantment.IronSkullEnchantment;
 import com.mrcrayfish.enchantable.enchantment.ReplantingEnchantment;
 import com.mrcrayfish.enchantable.enchantment.StompingEnchantment;
@@ -20,6 +21,7 @@ public class ModEnchantments
     public static final Enchantment STOMPING = null;
     public static final Enchantment IRON_SKULL = null;
     public static final Enchantment REPLANTING = null;
+    public static final Enchantment CULTIVATOR = null;
 
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Enchantment> event)
@@ -27,5 +29,6 @@ public class ModEnchantments
         event.getRegistry().register(new StompingEnchantment());
         event.getRegistry().register(new IronSkullEnchantment());
         event.getRegistry().register(new ReplantingEnchantment());
+        event.getRegistry().register(new CultivatorEnchantment());
     }
 }
