@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(Reference.MOD_ID)
 public class Enchantable
 {
+    public static final EnchantmentType HOE = EnchantmentType.create(Reference.MOD_ID + ":hoe", item -> item.getItem() instanceof HoeItem);
     public static final EnchantmentType TILLABLE = EnchantmentType.create(Reference.MOD_ID + ":tillable", item -> item.getItem() instanceof HoeItem || item.getItem() instanceof ShovelItem);
 
     public Enchantable()
@@ -30,7 +31,7 @@ public class Enchantable
         MinecraftForge.EVENT_BUS.register(this);
 
         /* Patches tools group to include new enchantment types */
-        this.addEnchantmentTypesToGroup(ItemGroup.TOOLS, TILLABLE);
+        this.addEnchantmentTypesToGroup(ItemGroup.TOOLS, HOE, TILLABLE);
     }
 
     private void addEnchantmentTypesToGroup(ItemGroup group, EnchantmentType ... types)

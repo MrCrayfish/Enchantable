@@ -1,5 +1,6 @@
 package com.mrcrayfish.enchantable.enchantment;
 
+import com.mrcrayfish.enchantable.Enchantable;
 import com.mrcrayfish.enchantable.Reference;
 import com.mrcrayfish.enchantable.core.ModEnchantments;
 import net.minecraft.block.*;
@@ -36,7 +37,7 @@ public class ReplantingEnchantment extends Enchantment
 {
     public ReplantingEnchantment()
     {
-        super(Rarity.RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
+        super(Rarity.RARE, Enchantable.HOE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "replanting"));
     }
 
