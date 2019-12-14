@@ -6,6 +6,7 @@ import com.mrcrayfish.enchantable.core.ModEnchantments;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CropsBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
@@ -35,7 +36,7 @@ public class CultivatorEnchantment extends Enchantment
 {
     public CultivatorEnchantment()
     {
-        super(Rarity.RARE, Enchantable.TILLABLE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
+        super(Rarity.VERY_RARE, Enchantable.TILLABLE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "cultivator"));
     }
 
@@ -63,9 +64,10 @@ public class CultivatorEnchantment extends Enchantment
         if(!(event.getItemStack().getItem() instanceof ShovelItem))
             return;
 
-        if(till(event.getWorld(), event.getPos(), event.getFace(), event.getItemStack(), event.getPlayer(), ShovelItem.field_195955_e))
+        int affectedBlocks = till(event.getWorld(), event.getPos(), event.getFace(), event.getItemStack(), event.getPlayer(), ShovelItem.field_195955_e);
+        if(affectedBlocks > 0)
         {
-            event.getItemStack().damageItem(1, event.getPlayer(), player -> player.sendBreakAnimation(event.getHand()));
+            event.getItemStack().damageItem(affectedBlocks, event.getPlayer(), player -> player.sendBreakAnimation(event.getHand()));
             event.getPlayer().swingArm(event.getHand());
             event.setCanceled(true);
         }
@@ -75,25 +77,66 @@ public class CultivatorEnchantment extends Enchantment
     public static void onUseHoe(UseHoeEvent event)
     {
         ItemUseContext context = event.getContext();
-        if(till(context.getWorld(), context.getPos(), context.getFace(), context.getItem(), context.getPlayer(), HoeItem.HOE_LOOKUP))
+        int affectedBlocks = till(context.getWorld(), context.getPos(), context.getFace(), context.getItem(), context.getPlayer(), HoeItem.HOE_LOOKUP);
+        if(affectedBlocks > 0 && context.getPlayer() != null)
         {
+            context.getItem().damageItem(affectedBlocks - 1, context.getPlayer(), player -> player.sendBreakAnimation(context.getHand()));
             event.setResult(Event.Result.ALLOW);
         }
     }
 
-    private static boolean till(World world, BlockPos pos, Direction face, ItemStack stack, PlayerEntity player, Map<Block, BlockState> replacementMap)
+    @SubscribeEvent
+    public static void onPlayerHarvestBlock(BlockEvent.BreakEvent event)
+    {
+        if(event.getState().getBlock() instanceof CropsBlock)
+        {
+            ItemStack heldItem = event.getPlayer().getHeldItemMainhand();
+            if(heldItem.isEmpty())
+                return;
+
+            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING))
+                return;
+
+            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR))
+                return;
+
+            World world = event.getPlayer().getEntityWorld();
+            BlockPos pos = event.getPos().add(-1, 0, -1);
+            for(int i = 0; i < 9; i++)
+            {
+                BlockPos cropPos = pos.add(i / 3, 0, i % 3);
+                BlockState state = world.getBlockState(cropPos);
+                if(state.getBlock() instanceof CropsBlock)
+                {
+                    CropsBlock crop = (CropsBlock) state.getBlock();
+                    if(state.get(crop.getAgeProperty()) != crop.getMaxAge())
+                        continue;
+
+                    Block.spawnDrops(state, world, cropPos);
+                    world.setBlockState(cropPos, Blocks.AIR.getDefaultState());
+                    if(!cropPos.equals(event.getPos()))
+                    {
+                        world.playEvent(2001, cropPos, Block.getStateId(state));
+                    }
+                }
+            }
+        }
+    }
+
+    private static int till(World world, BlockPos pos, Direction face, ItemStack stack, PlayerEntity player, Map<Block, BlockState> replacementMap)
     {
         if(stack.isEmpty())
-            return false;
+            return 0;
 
         if(!EnchantmentHelper.getEnchantments(stack).containsKey(ModEnchantments.CULTIVATOR))
-            return false;
+            return 0;
 
         pos = pos.add(-1, 0, -1);
         if(face != Direction.DOWN)
         {
-            boolean tilled = false;
-            for(int i = 0; i < 9; i++)
+            int maxBlocks = stack.getMaxDamage() - stack.getDamage();
+            int affectedBlocks = 0;
+            for(int i = 0; i < 9 && i < maxBlocks; i++)
             {
                 BlockPos groundPos = pos.add(i / 3, 0, i % 3);
                 boolean air = world.isAirBlock(groundPos.up());
@@ -104,7 +147,7 @@ public class CultivatorEnchantment extends Enchantment
                     if(groundState != null)
                     {
                         world.setBlockState(groundPos, groundState, 11);
-                        tilled = true;
+                        affectedBlocks++;
                         if(!air)
                         {
                             world.setBlockState(groundPos.up(), Blocks.AIR.getDefaultState());
@@ -112,12 +155,12 @@ public class CultivatorEnchantment extends Enchantment
                     }
                 }
             }
-            if(tilled)
+            if(affectedBlocks > 0)
             {
                 world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                return true;
+                return affectedBlocks;
             }
         }
-        return false;
+        return 0;
     }
 }
