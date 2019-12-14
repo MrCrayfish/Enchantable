@@ -6,6 +6,8 @@ import com.mrcrayfish.enchantable.enchantment.IronSkullEnchantment;
 import com.mrcrayfish.enchantable.enchantment.ReplantingEnchantment;
 import com.mrcrayfish.enchantable.enchantment.StompingEnchantment;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.item.HoeItem;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

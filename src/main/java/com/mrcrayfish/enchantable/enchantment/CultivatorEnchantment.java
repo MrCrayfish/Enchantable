@@ -1,5 +1,6 @@
 package com.mrcrayfish.enchantable.enchantment;
 
+import com.mrcrayfish.enchantable.Enchantable;
 import com.mrcrayfish.enchantable.Reference;
 import com.mrcrayfish.enchantable.core.ModEnchantments;
 import net.minecraft.block.Block;
@@ -33,14 +34,14 @@ public class CultivatorEnchantment extends Enchantment
 {
     public CultivatorEnchantment()
     {
-        super(Rarity.RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
+        super(Rarity.RARE, Enchantable.TILLABLE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "cultivator"));
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack)
     {
-        return stack.getItem() instanceof HoeItem;
+        return stack.getItem() instanceof HoeItem || stack.getItem() instanceof ShovelItem;
     }
 
     @Override
