@@ -65,6 +65,8 @@ public class CultivatorEnchantment extends Enchantment
 
         if(till(event.getWorld(), event.getPos(), event.getFace(), event.getItemStack(), event.getPlayer(), ShovelItem.field_195955_e))
         {
+            event.getItemStack().damageItem(1, event.getPlayer(), player -> player.sendBreakAnimation(event.getHand()));
+            event.getPlayer().swingArm(event.getHand());
             event.setCanceled(true);
         }
     }
