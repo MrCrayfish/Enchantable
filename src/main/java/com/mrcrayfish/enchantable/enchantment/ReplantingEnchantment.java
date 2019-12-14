@@ -16,6 +16,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.concurrent.TickDelayedTask;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.world.BlockEvent;
@@ -68,20 +70,40 @@ public class ReplantingEnchantment extends Enchantment
             if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING))
                 return;
 
-            CropsBlock crop = (CropsBlock) event.getState().getBlock();
-            if(event.getState().get(crop.getAgeProperty()) != crop.getMaxAge())
+            World world = event.getPlayer().getEntityWorld();
+            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR))
+            {
+                BlockPos pos = event.getPos().add(-1, 0, -1);
+                for(int i = 0; i < 9; i++)
+                {
+                    BlockPos cropPos = pos.add(i / 3, 0, i % 3);
+                    BlockState state = world.getBlockState(cropPos);
+                    ReplantingEnchantment.replantCrop(state, world, cropPos, event.getPlayer(), event.getPos());
+                }
+            }
+            else
+            {
+                ReplantingEnchantment.replantCrop(event.getState(), world, event.getPos(), event.getPlayer(), event.getPos());
+            }
+        }
+    }
+
+    private static void replantCrop(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockPos originalPos)
+    {
+        if(state.getBlock() instanceof CropsBlock)
+        {
+            CropsBlock crop = (CropsBlock) state.getBlock();
+            if(state.get(crop.getAgeProperty()) != crop.getMaxAge())
                 return;
 
-            World world = event.getPlayer().getEntityWorld();
-
-            ItemStack stack = crop.getItem(event.getWorld(), event.getPos(), event.getState());
+            ItemStack stack = crop.getItem(world, pos, state);
             if(stack.getItem() instanceof BlockItem)
             {
                 BlockItem blockItem = (BlockItem) stack.getItem();
                 if(blockItem.getBlock() instanceof CropsBlock)
                 {
                     ItemStack seeds = ItemStack.EMPTY;
-                    List<ItemStack> drops = Block.getDrops(event.getState(), (ServerWorld) world, event.getPos(), null);
+                    List<ItemStack> drops = Block.getDrops(state, (ServerWorld) world, pos, null);
                     for(ItemStack drop : drops)
                     {
                         if(drop.getItem() == stack.getItem())
@@ -92,18 +114,23 @@ public class ReplantingEnchantment extends Enchantment
                     }
                     if(seeds.isEmpty())
                     {
-                        seeds = findSeeds(event.getPlayer(), stack.getItem());
+                        seeds = findSeeds(player, stack.getItem());
                     }
 
-                    drops.forEach(drop -> Block.spawnAsEntity(world, event.getPos(), drop));
-                    event.getState().spawnAdditionalDrops(world, event.getPos(), ItemStack.EMPTY);
-                    world.setBlockState(event.getPos(), Blocks.AIR.getDefaultState());
+                    drops.forEach(drop -> Block.spawnAsEntity(world, pos, drop));
+                    state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState());
 
-                    BlockState state = blockItem.getBlock().getDefaultState();
-                    if(!seeds.isEmpty() & blockItem.getBlock().isValidPosition(state, world, event.getPos()))
+                    if(!pos.equals(originalPos))
+                    {
+                        world.playEvent(2001, pos, Block.getStateId(state));
+                    }
+
+                    BlockState seedState = blockItem.getBlock().getDefaultState();
+                    if(!seeds.isEmpty() & blockItem.getBlock().isValidPosition(seedState, world, pos))
                     {
                         MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
-                        server.enqueue(new TickDelayedTask(0, () -> world.setBlockState(event.getPos(), state, 3)));
+                        server.enqueue(new TickDelayedTask(0, () -> world.setBlockState(pos, seedState, 3)));
                         seeds.shrink(1);
                     }
                 }
