@@ -60,6 +60,9 @@ public class CultivatorEnchantment extends Enchantment
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
+        if(!(event.getItemStack().getItem() instanceof ShovelItem))
+            return;
+
         if(till(event.getWorld(), event.getPos(), event.getFace(), event.getItemStack(), event.getPlayer(), ShovelItem.field_195955_e))
         {
             event.setCanceled(true);
