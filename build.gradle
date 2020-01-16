@@ -13,7 +13,7 @@ apply plugin: 'maven-publish'
 
 version = project.property('mod.version')
 group = 'com.mrcrayfish'
-archivesBaseName = project.property('mod.id')
+archivesBaseName = project.property('mod.id') + "-1.15.1"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -60,19 +60,19 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.90'
+    minecraft 'net.minecraftforge:forge:1.15.1-30.0.35'
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": project.property('mod.name'),
-            "Specification-Vendor": project.property('mod.author'),
-            "Specification-Version": "1",
-            "Implementation-Title": project.property('mod.name'),
-            "Implementation-Version": project.property('mod.version'),
-            "Implementation-Vendor" : project.property('mod.author'),
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title": project.property('mod.name'),
+                "Specification-Vendor": project.property('mod.author'),
+                "Specification-Version": "1",
+                "Implementation-Title": project.property('mod.name'),
+                "Implementation-Version": project.property('mod.version'),
+                "Implementation-Vendor" : project.property('mod.author'),
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }

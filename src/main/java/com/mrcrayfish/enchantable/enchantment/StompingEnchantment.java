@@ -123,13 +123,13 @@ public class StompingEnchantment extends Enchantment
                                 {
                                     BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
                                     ServerWorld serverWorld = (ServerWorld) livingEntity.world;
-                                    serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.posX, livingEntity.posY, livingEntity.posZ, 50, 0, 0, 0, (double) 0.15F);
-                                    serverWorld.playSound(null, livingEntity.posX, livingEntity.posY, livingEntity.posZ, ModSounds.ENTITY_PLAYER_STOMP, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                                    serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.func_226277_ct_(), livingEntity.func_226278_cu_(), livingEntity.func_226281_cx_(), 50, 0, 0, 0, (double) 0.15F);
+                                    serverWorld.playSound(null, livingEntity.func_226277_ct_(), livingEntity.func_226278_cu_(), livingEntity.func_226281_cx_(), ModSounds.ENTITY_PLAYER_STOMP, SoundCategory.PLAYERS, 1.0F, 1.0F);
                                 }
 
                                 /* Cause the entity to bop up into the air */
                                 double stompStrength = 0.3 * (level / 4.0);
-                                Vec3d direction = new Vec3d(livingEntity.posX - player.posX, 0, livingEntity.posZ - player.posZ).normalize();
+                                Vec3d direction = new Vec3d(livingEntity.func_226277_ct_() - player.func_226277_ct_(), 0, livingEntity.func_226281_cx_() - player.func_226281_cx_()).normalize();
                                 livingEntity.setMotion(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.addVelocity(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.velocityChanged = true;

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[28,)"
+loaderVersion="[30,)"
 
 [[mods]]
 modId="enchantable"
@@ -15,12 +15,12 @@ description="Adds new balanced enchantments that extend improve the vanilla game
 [[dependencies.enchantable]]
     modId="forge"
     mandatory=true
-    versionRange="[28.1.90,)"
+    versionRange="[30.0.35,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.enchantable]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.4]"
+    versionRange="[1.15.1,1.16)"
     ordering="NONE"
     side="BOTH"
