@@ -3,5 +3,11 @@
     "enchantment.enchantable.iron_skull": "Железный череп",
     "enchantment.enchantable.replanting": "Пересев",
     "enchantment.enchantable.cultivator": "Культиватор",
-    "subtitle.enchantable.player.stomp": "Топот"
+
+    "subtitle.enchantable.player.stomp": "Топот",
+
+    "enchantment.enchantable.stomping.desc": "Перенаправляет часть урона от падения на мобов в радиусе пяти блоков.",
+    "enchantment.enchantable.iron_skull.desc": "Убирает урон при влетании в стену на элитрах.",
+    "enchantment.enchantable.replanting.desc": "Пересаживает семена, когда вы разбиваете урожай.",
+    "enchantment.enchantable.cultivator.desc": "Увеличивает площадь вспахивания на 3x3. Также работает для сбора урожая."
 }
