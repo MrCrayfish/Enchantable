@@ -3,5 +3,12 @@
     "enchantment.enchantable.iron_skull": "Eiserner Sch\u00e4del",
     "enchantment.enchantable.replanting": "Umpflanzen",
     "enchantment.enchantable.cultivator": "Kultivator",
-    "subtitle.enchantable.player.stomp": "Stampfen"
+
+    "subtitle.enchantable.player.stomp": "Stampfen",
+
+    "enchantment.enchantable.stomping.desc": "Leitet einen Teil des Fallschadens an Kreaturen in einem Radius von fünf Blöcken weiter.",
+    "enchantment.enchantable.iron_skull.desc": "Beugt Schaden vor, der beim fliegen gegen eine Wand mit Elytren entsteht.",
+    "enchantment.enchantable.replanting.desc": "Pflanzt Samen beim Ernten von Pflanzen nach.",
+    "enchantment.enchantable.cultivator.desc": "Baut einen 3x3-Bereich ab, anstatt eines einzelnen Blocks. Funktioniert auch für die Ernte von Pflanzen."
+}
 }
