@@ -38,7 +38,6 @@ public class ReplantingEnchantment extends Enchantment
     public ReplantingEnchantment()
     {
         super(Rarity.RARE, Enchantable.HOE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
-        this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "replanting"));
     }
 
     @Override

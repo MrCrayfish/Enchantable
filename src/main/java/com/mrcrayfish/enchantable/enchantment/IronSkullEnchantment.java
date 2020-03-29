@@ -26,7 +26,6 @@ public class IronSkullEnchantment extends Enchantment
     public IronSkullEnchantment()
     {
         super(Rarity.UNCOMMON, EnchantmentType.ARMOR_HEAD, new EquipmentSlotType[]{EquipmentSlotType.HEAD});
-        this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "iron_skull"));
     }
 
     @Override

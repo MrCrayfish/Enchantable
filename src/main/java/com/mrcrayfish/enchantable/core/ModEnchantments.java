@@ -10,27 +10,21 @@ import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.item.HoeItem;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Author: MrCrayfish
  */
-@ObjectHolder(Reference.MOD_ID)
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEnchantments
 {
-    public static final Enchantment STOMPING = null;
-    public static final Enchantment IRON_SKULL = null;
-    public static final Enchantment REPLANTING = null;
-    public static final Enchantment CULTIVATOR = null;
+    public static final DeferredRegister<Enchantment> REGISTER = new DeferredRegister<>(ForgeRegistries.ENCHANTMENTS, Reference.MOD_ID);
 
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<Enchantment> event)
-    {
-        event.getRegistry().register(new StompingEnchantment());
-        event.getRegistry().register(new IronSkullEnchantment());
-        event.getRegistry().register(new ReplantingEnchantment());
-        event.getRegistry().register(new CultivatorEnchantment());
-    }
+    public static final RegistryObject<Enchantment> STOMPING = REGISTER.register("stomping", StompingEnchantment::new);
+    public static final RegistryObject<Enchantment> IRON_SKULL = REGISTER.register("iron_skull", IronSkullEnchantment::new);
+    public static final RegistryObject<Enchantment> REPLANTING = REGISTER.register("replanting", ReplantingEnchantment::new);
+    public static final RegistryObject<Enchantment> CULTIVATOR = REGISTER.register("cultivator", CultivatorEnchantment::new);
 }

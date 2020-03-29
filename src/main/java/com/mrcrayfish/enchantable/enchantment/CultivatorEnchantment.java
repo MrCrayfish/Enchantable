@@ -37,7 +37,6 @@ public class CultivatorEnchantment extends Enchantment
     public CultivatorEnchantment()
     {
         super(Rarity.VERY_RARE, Enchantable.TILLABLE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
-        this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "cultivator"));
     }
 
     @Override
