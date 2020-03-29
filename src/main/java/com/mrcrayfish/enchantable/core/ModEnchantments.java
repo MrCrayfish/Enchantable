@@ -27,4 +27,5 @@ public class ModEnchantments
     public static final RegistryObject<Enchantment> IRON_SKULL = REGISTER.register("iron_skull", IronSkullEnchantment::new);
     public static final RegistryObject<Enchantment> REPLANTING = REGISTER.register("replanting", ReplantingEnchantment::new);
     public static final RegistryObject<Enchantment> CULTIVATOR = REGISTER.register("cultivator", CultivatorEnchantment::new);
+    public static final RegistryObject<Enchantment> EXCAVATOR = REGISTER.register("excavator", CultivatorEnchantment::new);
 }

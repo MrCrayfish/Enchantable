@@ -67,11 +67,11 @@ public class ReplantingEnchantment extends Enchantment
             if(heldItem.isEmpty())
                 return;
 
-            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING))
+            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING.get()))
                 return;
 
             World world = event.getPlayer().getEntityWorld();
-            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR))
+            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR.get()))
             {
                 BlockPos pos = event.getPos().add(-1, 0, -1);
                 for(int i = 0; i < 9; i++)

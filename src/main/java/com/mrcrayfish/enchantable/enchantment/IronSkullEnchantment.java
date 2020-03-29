@@ -53,7 +53,7 @@ public class IronSkullEnchantment extends Enchantment
                 if(!stack.isEmpty())
                 {
                     Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-                    if(enchantments.containsKey(ModEnchantments.IRON_SKULL))
+                    if(enchantments.containsKey(ModEnchantments.IRON_SKULL.get()))
                     {
                         event.setCanceled(true);
                         stack.damageItem((int) event.getAmount(), player, entity -> {

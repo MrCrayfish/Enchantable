@@ -93,10 +93,10 @@ public class CultivatorEnchantment extends Enchantment
             if(heldItem.isEmpty())
                 return;
 
-            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING))
+            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING.get()))
                 return;
 
-            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR))
+            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR.get()))
                 return;
 
             World world = event.getPlayer().getEntityWorld();
@@ -127,7 +127,7 @@ public class CultivatorEnchantment extends Enchantment
         if(stack.isEmpty())
             return 0;
 
-        if(!EnchantmentHelper.getEnchantments(stack).containsKey(ModEnchantments.CULTIVATOR))
+        if(!EnchantmentHelper.getEnchantments(stack).containsKey(ModEnchantments.CULTIVATOR.get()))
             return 0;
 
         pos = pos.add(-1, 0, -1);

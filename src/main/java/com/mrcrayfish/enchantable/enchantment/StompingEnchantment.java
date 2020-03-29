@@ -89,9 +89,9 @@ public class StompingEnchantment extends Enchantment
                 if(!stack.isEmpty())
                 {
                     Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-                    if(enchantments.containsKey(ModEnchantments.STOMPING))
+                    if(enchantments.containsKey(ModEnchantments.STOMPING.get()))
                     {
-                        int level = enchantments.get(ModEnchantments.STOMPING);
+                        int level = enchantments.get(ModEnchantments.STOMPING.get());
                         float strengthFactor = 0.8F * (level / 4.0F);
 
                         /* Finds entities in a five block radius around the player */

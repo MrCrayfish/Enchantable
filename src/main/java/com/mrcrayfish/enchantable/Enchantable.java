@@ -14,8 +14,10 @@ import net.minecraft.item.ShovelItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * Author: MrCrayfish
@@ -28,6 +30,8 @@ public class Enchantable
 
     public Enchantable()
     {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModEnchantments.REGISTER.register(bus);
         MinecraftForge.EVENT_BUS.register(this);
 
         /* Patches tools group to include new enchantment types */
@@ -53,7 +57,7 @@ public class Enchantable
             if(heldItem.isEmpty())
                 return;
 
-            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING) && !EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR))
+            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING.get()) && !EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR.get()))
                 return;
 
             CropsBlock crop = (CropsBlock) state.getBlock();
