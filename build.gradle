@@ -13,12 +13,12 @@ apply plugin: 'maven-publish'
 
 version = project.property('mod.version')
 group = 'com.mrcrayfish'
-archivesBaseName = project.property('mod.id') + "-1.15.1"
+archivesBaseName = project.property('mod.id') + "-1.15.2"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: '20200122-1.15.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -60,7 +60,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.1-30.0.35'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.0'
 }
 
 jar {

@@ -64,7 +64,7 @@ public class CultivatorEnchantment extends Enchantment
         if(!(event.getItemStack().getItem() instanceof ShovelItem))
             return;
 
-        int affectedBlocks = till(event.getWorld(), event.getPos(), event.getFace(), event.getItemStack(), event.getPlayer(), ShovelItem.field_195955_e);
+        int affectedBlocks = till(event.getWorld(), event.getPos(), event.getFace(), event.getItemStack(), event.getPlayer(), ShovelItem.SHOVEL_LOOKUP);
         if(affectedBlocks > 0)
         {
             event.getItemStack().damageItem(affectedBlocks, event.getPlayer(), player -> player.sendBreakAnimation(event.getHand()));

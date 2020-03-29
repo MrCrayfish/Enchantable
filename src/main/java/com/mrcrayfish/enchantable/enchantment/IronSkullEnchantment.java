@@ -58,7 +58,7 @@ public class IronSkullEnchantment extends Enchantment
                     {
                         event.setCanceled(true);
                         stack.damageItem((int) event.getAmount(), player, entity -> {
-                            entity.sendBreakAnimation(EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.HEAD.getIndex()));
+                            entity.sendBreakAnimation(EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.HEAD.getIndex()));
                         });
                     }
                 }
