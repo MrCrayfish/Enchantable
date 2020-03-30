@@ -29,10 +29,12 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Author: MrCrayfish
@@ -129,64 +131,55 @@ public class ExcavatorEnchantment extends Enchantment
             return 0;
         }
 
-        int totalBlocks = 0;
-        int totalTicks = 0;
-        Direction.Axis axis = direction.getAxis();
-        if(axis.isHorizontal())
+        Function<Pair<Integer, Integer>, BlockPos> function;
+        if(direction.getAxis().isHorizontal())
         {
-            direction = direction.rotateY();
-            for(int i = 0; i < size; i++)
-            {
-                for(int j = 0; j < size; j++)
-                {
-                    BlockPos blockPos = pos.add(direction.getAxis().getCoordinate(i - (size - 1) / 2, 0, 0), j - (size - 1) / 2, direction.getAxis().getCoordinate(0, 0, i - (size - 1) / 2));
-                    blockState = world.getBlockState(blockPos);
-                    if(blockState.isAir(world, blockPos))
-                    {
-                        continue;
-                    }
-                    if(isToolEffective(toolTypes, blockState, player, world, blockPos))
-                    {
-                        if(blockState.getBlock() instanceof OreBlock)
-                        {
-                            continue;
-                        }
-                        totalTicks += getDigSpeed(player, blockState, blockPos);
-                        totalBlocks++;
-                    }
-                }
-            }
+            Direction finalDirection = direction.rotateY();
+            function = pair -> pos.add(finalDirection.getAxis().getCoordinate(pair.getLeft() - (size - 1) / 2, 0, 0), pair.getRight() - (size - 1) / 2, finalDirection.getAxis().getCoordinate(0, 0, pair.getLeft() - (size - 1) / 2));
         }
         else
         {
-            for(int i = 0; i < size; i++)
-            {
-                for(int j = 0; j < size; j++)
-                {
-                    BlockPos blockPos = pos.add(i - (size - 1) / 2, 0, j - (size - 1) / 2);
-                    blockState = world.getBlockState(blockPos);
-                    if(blockState.isAir(world, blockPos))
-                    {
-                        continue;
-                    }
-                    if(isToolEffective(toolTypes, blockState, player, world, blockPos))
-                    {
-                        if(blockState.getBlock() instanceof OreBlock)
-                        {
-                            continue;
-                        }
-                        totalTicks += getDigSpeed(player, blockState, blockPos);
-                        totalBlocks++;
-                    }
-                }
-            }
+            function = pair -> pos.add(pair.getLeft() - (size - 1) / 2, 0, pair.getRight() - (size - 1) / 2);
         }
+
+        Pair<Float, Integer> pair = getDestroySpeed(world, pos, player, size, toolTypes, function);
+        float totalDigSpeed = pair.getLeft();
+        int totalBlocks = pair.getRight();
         if(totalBlocks <= 0)
         {
             return 0;
         }
-        return (totalTicks / (float) totalBlocks) / (float) totalBlocks;
+        return (totalDigSpeed / (float) totalBlocks) / (float) totalBlocks;
     }
+
+    private static Pair<Float, Integer> getDestroySpeed(World world, BlockPos source, PlayerEntity player, int size, Set<ToolType> toolTypes, Function<Pair<Integer, Integer>, BlockPos> function)
+    {
+        float totalDigSpeed = 0;
+        int totalBlocks = 0;
+        for(int i = 0; i < size; i++)
+        {
+            for(int j = 0; j < size; j++)
+            {
+                BlockPos blockPos = function.apply(Pair.of(i, j));
+                BlockState blockState = world.getBlockState(blockPos);
+                if(blockState.isAir(world, blockPos))
+                {
+                    continue;
+                }
+                if(isToolEffective(toolTypes, blockState, player, world, blockPos))
+                {
+                    if(blockState.getBlock() instanceof OreBlock)
+                    {
+                        continue;
+                    }
+                    totalDigSpeed += getDigSpeed(player, blockState, blockPos);
+                    totalBlocks++;
+                }
+            }
+        }
+        return Pair.of(totalDigSpeed, totalBlocks);
+    }
+
 
     @SubscribeEvent
     public static void onPlayerBreak(BlockEvent.BreakEvent event)
@@ -231,48 +224,44 @@ public class ExcavatorEnchantment extends Enchantment
             return;
         }
 
-        int damageAmount = 0;
-        Direction.Axis axis = direction.getAxis();
-        if(axis.isHorizontal())
+        Function<Pair<Integer, Integer>, BlockPos> function;
+        if(direction.getAxis().isHorizontal())
         {
-            direction = direction.rotateY();
-            for(int i = 0; i < size; i++)
-            {
-                for(int j = 0; j < size; j++)
-                {
-                    BlockPos newPos = pos.add(direction.getAxis().getCoordinate(i - (size - 1) / 2, 0, 0), j - (size - 1) / 2, direction.getAxis().getCoordinate(0, 0, i - (size - 1) / 2));
-                    if(newPos.equals(pos))
-                    {
-                        continue;
-                    }
-                    if(destroyBlock(world, toolTypes, newPos, true, player))
-                    {
-                        damageAmount++;
-                    }
-                }
-            }
+            Direction finalDirection = direction.rotateY();
+            function = pair -> pos.add(finalDirection.getAxis().getCoordinate(pair.getLeft() - (size - 1) / 2, 0, 0), pair.getRight() - (size - 1) / 2, finalDirection.getAxis().getCoordinate(0, 0, pair.getLeft() - (size - 1) / 2));
         }
         else
         {
-            for(int i = 0; i < size; i++)
-            {
-                for(int j = 0; j < size; j++)
-                {
-                    BlockPos newPos = pos.add(i - (size - 1) / 2, 0, j - (size - 1) / 2);
-                    if(newPos.equals(pos))
-                    {
-                        continue;
-                    }
-                    if(destroyBlock(world, toolTypes, newPos, true, player))
-                    {
-                        damageAmount++;
-                    }
-                }
-            }
+            function = pair -> pos.add(pair.getLeft() - (size - 1) / 2, 0, pair.getRight() - (size - 1) / 2);
         }
+
+        int damageAmount = destroyBlocks(world, pos, player, size, toolTypes, function);
 
         /* Handles applying damage to the tool and considers if it has an unbreaking enchantment */
         heldItem.attemptDamageItem(damageAmount, world.rand, (ServerPlayerEntity) player);
+    }
+
+    private static int destroyBlocks(World world, BlockPos source, PlayerEntity player, int size, Set<ToolType> toolTypes, Function<Pair<Integer, Integer>, BlockPos> function)
+    {
+        int damageAmount = 0;
+        for(int i = 0; i < size; i++)
+        {
+            for(int j = 0; j < size; j++)
+            {
+                System.out.println(i + " " + j);
+                BlockPos newPos = function.apply(Pair.of(i, j));
+                System.out.println(newPos);
+                if(newPos.equals(source))
+                {
+                    continue;
+                }
+                if(destroyBlock(world, toolTypes, newPos, true, player))
+                {
+                    damageAmount++;
+                }
+            }
+        }
+        return damageAmount;
     }
 
     private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, PlayerEntity player)
