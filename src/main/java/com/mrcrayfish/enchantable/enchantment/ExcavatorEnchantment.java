@@ -88,7 +88,7 @@ public class ExcavatorEnchantment extends Enchantment
      * speed and divides it by the number of blocks it can effectively mine.
      *
      * @param player the player mining the blocks
-     * @param pos the position of the block being targeted
+     * @param pos    the position of the block being targeted
      * @return the effective speed
      */
     private static float getEffectiveDigSpeed(PlayerEntity player, BlockPos pos)
@@ -179,7 +179,6 @@ public class ExcavatorEnchantment extends Enchantment
         }
         return Pair.of(totalDigSpeed, totalBlocks);
     }
-
 
     @SubscribeEvent
     public static void onPlayerBreak(BlockEvent.BreakEvent event)

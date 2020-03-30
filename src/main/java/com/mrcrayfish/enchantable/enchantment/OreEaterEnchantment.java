@@ -142,8 +142,6 @@ public class OreEaterEnchantment extends Enchantment
         }
     }
 
-
-
     private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, ItemStack stack, PlayerEntity player)
     {
         BlockState blockState = world.getBlockState(pos);
@@ -181,7 +179,7 @@ public class OreEaterEnchantment extends Enchantment
      * speed and divides it by the number of blocks it can effectively mine.
      *
      * @param player the player mining the blocks
-     * @param pos the position of the block being targeted
+     * @param pos    the position of the block being targeted
      * @return the effective speed
      */
     private static float getEffectiveDigSpeed(PlayerEntity player, BlockPos pos)
