@@ -248,9 +248,7 @@ public class ExcavatorEnchantment extends Enchantment
         {
             for(int j = 0; j < size; j++)
             {
-                System.out.println(i + " " + j);
                 BlockPos newPos = function.apply(Pair.of(i, j));
-                System.out.println(newPos);
                 if(newPos.equals(source))
                 {
                     continue;
@@ -297,7 +295,7 @@ public class ExcavatorEnchantment extends Enchantment
         return net.minecraftforge.common.ForgeHooks.canHarvestBlock(state, player, world, pos);
     }
 
-    public static float getDigSpeed(PlayerEntity player, BlockState state, @Nullable BlockPos pos)
+    private static float getDigSpeed(PlayerEntity player, BlockState state, @Nullable BlockPos pos)
     {
         float destroySpeed = player.inventory.getDestroySpeed(state);
         if(destroySpeed > 1.0F)
