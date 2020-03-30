@@ -10,5 +10,6 @@
     "enchantment.enchantable.stomping.desc": "Redirects a portion of fall damage to mobs in a five block radius.",
     "enchantment.enchantable.iron_skull.desc": "Prevents damage caused by flying into a wall with an elytra.",
     "enchantment.enchantable.replanting.desc": "Replants seeds as you break crops.",
-    "enchantment.enchantable.cultivator.desc": "Tills a 3x3 area rather than a single block. Also works for harvesting crops."
+    "enchantment.enchantable.cultivator.desc": "Tills a 3x3 area rather than a single block. Also works for harvesting crops.",
+    "enchantment.enchantable.excavator.desc": "Allows you to dig a 3x3 area. This can be applied to pickaxes, axes, and shovels"
 }
