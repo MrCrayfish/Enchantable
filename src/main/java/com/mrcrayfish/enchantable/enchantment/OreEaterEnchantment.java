@@ -25,10 +25,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: MrCrayfish
@@ -62,7 +59,7 @@ public class OreEaterEnchantment extends Enchantment
     @Override
     public boolean canApplyTogether(Enchantment enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != Enchantments.SILK_TOUCH && enchantment != ModEnchantments.EXCAVATOR.get();
+        return super.canApplyTogether(enchantment) && enchantment != Enchantments.SILK_TOUCH && enchantment != ModEnchantments.EXCAVATOR.get();
     }
 
     @SubscribeEvent
@@ -99,14 +96,31 @@ public class OreEaterEnchantment extends Enchantment
         }
 
         Block targetBlock = state.getBlock();
-        List<BlockPos> orePositions = new ArrayList<>();
-        getNeighbouringOres(targetBlock, world, pos, orePositions, 2 + Math.max(0, level - 1) * 2);
+        Queue<OreEntry> queue = new LinkedList<>();
+        Set<BlockPos> explored = new HashSet<>();
+        OreEntry start = new OreEntry(pos, 2 + Math.max(0, level - 1) * 2);
+        queue.add(start);
+        explored.add(pos);
+
+        while(!queue.isEmpty())
+        {
+            OreEntry oreEntry = queue.remove();
+            if(oreEntry.distance - 1 > 0)
+            {
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.north(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.east(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.south(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.west(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.up(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.down(), queue, explored, oreEntry.distance - 1);
+            }
+            explored.add(oreEntry.pos);
+        }
 
         int damageAmount = 0;
-        for(int i = 0; i < orePositions.size(); i++)
+        for(BlockPos orePos : explored)
         {
-            BlockPos orePos = orePositions.get(i);
-            if(destroyBlock(world, toolTypes, orePos, true, player))
+            if(destroyBlock(world, toolTypes, orePos, true, heldItem, player))
             {
                 damageAmount++;
             }
@@ -116,35 +130,21 @@ public class OreEaterEnchantment extends Enchantment
         heldItem.attemptDamageItem(damageAmount, world.rand, (ServerPlayerEntity) player);
     }
 
-    private static void getNeighbouringOres(Block targetBlock, World world, BlockPos pos, List<BlockPos> orePositions, int distance)
+    private static void getNeighbouringOre(Block targetBlock, World world, BlockPos pos, Queue<OreEntry> queue, Set<BlockPos> explored, int distance)
     {
-        if(distance == 0)
-        {
-            return;
-        }
-
         BlockState state = world.getBlockState(pos);
-        if(state.getBlock() != targetBlock)
+        if(state.getBlock() == targetBlock)
         {
-            return;
+            if(!explored.contains(pos))
+            {
+                queue.offer(new OreEntry(pos, distance));
+            }
         }
-
-        if(orePositions.contains(pos))
-        {
-            return;
-        }
-
-        orePositions.add(pos);
-
-        getNeighbouringOres(targetBlock, world, pos.north(), orePositions, distance - 1);
-        getNeighbouringOres(targetBlock, world, pos.east(), orePositions, distance - 1);
-        getNeighbouringOres(targetBlock, world, pos.south(), orePositions, distance - 1);
-        getNeighbouringOres(targetBlock, world, pos.west(), orePositions, distance - 1);
-        getNeighbouringOres(targetBlock, world, pos.up(), orePositions, distance - 1);
-        getNeighbouringOres(targetBlock, world, pos.down(), orePositions, distance - 1);
     }
 
-    private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, PlayerEntity player)
+
+
+    private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, ItemStack stack, PlayerEntity player)
     {
         BlockState blockState = world.getBlockState(pos);
         if(blockState.isAir(world, pos))
@@ -157,7 +157,7 @@ public class OreEaterEnchantment extends Enchantment
             if(spawnDrops)
             {
                 TileEntity tileEntity = blockState.hasTileEntity() ? world.getTileEntity(pos) : null;
-                Block.spawnDrops(blockState, world, pos, tileEntity, player, ItemStack.EMPTY);
+                Block.spawnDrops(blockState, world, pos, tileEntity, player, stack);
             }
             /*MinecraftServer server = world.getServer();
             server.enqueue(new TickDelayedTask());*/
@@ -215,14 +215,31 @@ public class OreEaterEnchantment extends Enchantment
         }
 
         Block targetBlock = state.getBlock();
-        List<BlockPos> orePositions = new ArrayList<>();
-        getNeighbouringOres(targetBlock, world, pos, orePositions, 2 + Math.max(0, level - 1) * 2);
+        Queue<OreEntry> queue = new LinkedList<>();
+        Set<BlockPos> explored = new HashSet<>();
+        OreEntry start = new OreEntry(pos, 2 + Math.max(0, level - 1) * 2);
+        queue.add(start);
+        explored.add(pos);
+
+        while(!queue.isEmpty())
+        {
+            OreEntry oreEntry = queue.remove();
+            if(oreEntry.distance - 1 > 0)
+            {
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.north(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.east(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.south(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.west(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.up(), queue, explored, oreEntry.distance - 1);
+                getNeighbouringOre(targetBlock, world, oreEntry.pos.down(), queue, explored, oreEntry.distance - 1);
+            }
+            explored.add(oreEntry.pos);
+        }
 
         float totalDigSpeed = 0;
         int totalBlocks = 0;
-        for(int i = 0; i < orePositions.size(); i++)
+        for(BlockPos orePos : explored)
         {
-            BlockPos orePos = orePositions.get(i);
             state = world.getBlockState(orePos);
             if(ExcavatorEnchantment.isToolEffective(toolTypes, state, player, world, orePos))
             {
@@ -236,5 +253,42 @@ public class OreEaterEnchantment extends Enchantment
             return 0;
         }
         return (totalDigSpeed / (float) totalBlocks) / (float) totalBlocks;
+    }
+
+    private static class OreEntry
+    {
+        private BlockPos pos;
+        private int distance;
+
+        public OreEntry(BlockPos pos, int distance)
+        {
+            this.pos = pos;
+            this.distance = distance;
+        }
+
+        public BlockPos getPos()
+        {
+            return pos;
+        }
+
+        public int getDistance()
+        {
+            return distance;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if(this == o) return true;
+            if(o == null || getClass() != o.getClass()) return false;
+            OreEntry oreEntry = (OreEntry) o;
+            return Objects.equals(pos, oreEntry.pos);
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash(pos);
+        }
     }
 }
