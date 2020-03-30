@@ -133,7 +133,11 @@ public class ExcavatorEnchantment extends Enchantment
                     }
                     if(isToolEffective(toolTypes, blockState, player, world, blockPos))
                     {
-                        totalTicks += getDigSpeed(player, blockState, pos);
+                        if(blockState.getBlock() instanceof OreBlock)
+                        {
+                            continue;
+                        }
+                        totalTicks += getDigSpeed(player, blockState, blockPos);
                         totalBlocks++;
                     }
                 }
@@ -153,7 +157,11 @@ public class ExcavatorEnchantment extends Enchantment
                     }
                     if(isToolEffective(toolTypes, blockState, player, world, blockPos))
                     {
-                        totalTicks += getDigSpeed(player, blockState, pos);
+                        if(blockState.getBlock() instanceof OreBlock)
+                        {
+                            continue;
+                        }
+                        totalTicks += getDigSpeed(player, blockState, blockPos);
                         totalBlocks++;
                     }
                 }
@@ -250,6 +258,10 @@ public class ExcavatorEnchantment extends Enchantment
         }
         if(isToolEffective(toolTypes, blockState, player, world, pos))
         {
+            if(blockState.getBlock() instanceof OreBlock)
+            {
+                return false;
+            }
             IFluidState fluidState = world.getFluidState(pos);
             if(spawnDrops)
             {
