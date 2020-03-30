@@ -21,6 +21,8 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -100,8 +102,15 @@ public class ExcavatorEnchantment extends Enchantment
         int level = EnchantmentHelper.getEnchantments(heldItem).get(ModEnchantments.EXCAVATOR.get());
         int size = BASE_SIZE + Math.max(0, level - 1) * 2;
 
-        Direction direction = Direction.getFacingDirections(player)[0];
         World world = player.getEntityWorld();
+        Direction direction = Direction.getFacingDirections(player)[0];
+        double reach = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+        RayTraceResult result = player.pick(reach, 0, false);
+        if(result.getType() == RayTraceResult.Type.BLOCK)
+        {
+            BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
+            direction = blockResult.getFace();
+        }
 
         Set<ToolType> toolTypes = new HashSet<>();
         if(heldItem.getItem() instanceof ToolItem)
@@ -190,6 +199,13 @@ public class ExcavatorEnchantment extends Enchantment
 
         PlayerEntity player = event.getPlayer();
         Direction direction = Direction.getFacingDirections(event.getPlayer())[0];
+        double reach = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+        RayTraceResult result = player.pick(reach, 0, false);
+        if(result.getType() == RayTraceResult.Type.BLOCK)
+        {
+            BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
+            direction = blockResult.getFace();
+        }
         World world = event.getPlayer().getEntityWorld();
         BlockPos pos = event.getPos();
 
