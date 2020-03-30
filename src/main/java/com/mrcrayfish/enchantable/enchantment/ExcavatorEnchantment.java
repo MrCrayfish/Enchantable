@@ -20,6 +20,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -142,7 +143,7 @@ public class ExcavatorEnchantment extends Enchantment
             function = pair -> pos.add(pair.getLeft() - (size - 1) / 2, 0, pair.getRight() - (size - 1) / 2);
         }
 
-        Pair<Float, Integer> pair = getDestroySpeed(world, pos, player, size, toolTypes, function);
+        Pair<Float, Integer> pair = getDestroySpeed(world, player, size, toolTypes, heldItem, function);
         float totalDigSpeed = pair.getLeft();
         int totalBlocks = pair.getRight();
         if(totalBlocks <= 0)
@@ -152,8 +153,9 @@ public class ExcavatorEnchantment extends Enchantment
         return (totalDigSpeed / (float) totalBlocks) / (float) totalBlocks;
     }
 
-    private static Pair<Float, Integer> getDestroySpeed(World world, BlockPos source, PlayerEntity player, int size, Set<ToolType> toolTypes, Function<Pair<Integer, Integer>, BlockPos> function)
+    private static Pair<Float, Integer> getDestroySpeed(World world, PlayerEntity player, int size, Set<ToolType> toolTypes, ItemStack stack, Function<Pair<Integer, Integer>, BlockPos> function)
     {
+        int durability = stack.getMaxDamage() - stack.getDamage();
         float totalDigSpeed = 0;
         int totalBlocks = 0;
         for(int i = 0; i < size; i++)
@@ -174,6 +176,11 @@ public class ExcavatorEnchantment extends Enchantment
                     }
                     totalDigSpeed += getDigSpeed(player, blockState, blockPos);
                     totalBlocks++;
+
+                    if(totalBlocks >= durability)
+                    {
+                        return Pair.of(totalDigSpeed, totalBlocks);
+                    }
                 }
             }
         }
@@ -234,14 +241,19 @@ public class ExcavatorEnchantment extends Enchantment
             function = pair -> pos.add(pair.getLeft() - (size - 1) / 2, 0, pair.getRight() - (size - 1) / 2);
         }
 
-        int damageAmount = destroyBlocks(world, pos, player, size, toolTypes, heldItem, function);
+        int durability = heldItem.getMaxDamage() - heldItem.getDamage();
+        if(durability > 1) //No point breaking blocks if only one durability left
+        {
+            int damageAmount = destroyBlocks(world, pos, player, size, toolTypes, heldItem, function);
 
-        /* Handles applying damage to the tool and considers if it has an unbreaking enchantment */
-        heldItem.attemptDamageItem(damageAmount, world.rand, (ServerPlayerEntity) player);
+            /* Handles applying damage to the tool and considers if it has an unbreaking enchantment */
+            heldItem.damageItem(damageAmount, player, player1 -> player1.sendBreakAnimation(Hand.MAIN_HAND));
+        }
     }
 
     private static int destroyBlocks(World world, BlockPos source, PlayerEntity player, int size, Set<ToolType> toolTypes, ItemStack stack, Function<Pair<Integer, Integer>, BlockPos> function)
     {
+        int durability = stack.getMaxDamage() - stack.getDamage();
         int damageAmount = 0;
         for(int i = 0; i < size; i++)
         {
@@ -255,6 +267,10 @@ public class ExcavatorEnchantment extends Enchantment
                 if(destroyBlock(world, toolTypes, newPos, true, stack, player))
                 {
                     damageAmount++;
+                }
+                if(damageAmount >= durability)
+                {
+                    return damageAmount;
                 }
             }
         }

@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -97,7 +98,7 @@ public class OreEaterEnchantment extends Enchantment
 
         Block targetBlock = state.getBlock();
         Queue<OreEntry> queue = new LinkedList<>();
-        Set<BlockPos> explored = new HashSet<>();
+        Set<BlockPos> explored = new LinkedHashSet<>();
         OreEntry start = new OreEntry(pos, 2 + Math.max(0, level - 1) * 2);
         queue.add(start);
         explored.add(pos);
@@ -118,16 +119,21 @@ public class OreEaterEnchantment extends Enchantment
         }
 
         int damageAmount = 0;
+        int durability = heldItem.getMaxDamage() - heldItem.getDamage();
         for(BlockPos orePos : explored)
         {
             if(destroyBlock(world, toolTypes, orePos, true, heldItem, player))
             {
                 damageAmount++;
             }
+            if(damageAmount >= durability)
+            {
+                break;
+            }
         }
 
         /* Handles applying damage to the tool and considers if it has an unbreaking enchantment */
-        heldItem.attemptDamageItem(damageAmount, world.rand, (ServerPlayerEntity) player);
+        heldItem.damageItem(damageAmount, player, player1 -> player1.sendBreakAnimation(Hand.MAIN_HAND));
     }
 
     private static void getNeighbouringOre(Block targetBlock, World world, BlockPos pos, Queue<OreEntry> queue, Set<BlockPos> explored, int distance)
@@ -157,8 +163,6 @@ public class OreEaterEnchantment extends Enchantment
                 TileEntity tileEntity = blockState.hasTileEntity() ? world.getTileEntity(pos) : null;
                 Block.spawnDrops(blockState, world, pos, tileEntity, player, stack);
             }
-            /*MinecraftServer server = world.getServer();
-            server.enqueue(new TickDelayedTask());*/
             return world.setBlockState(pos, fluidState.getBlockState(), 3);
         }
         return false;
@@ -236,6 +240,7 @@ public class OreEaterEnchantment extends Enchantment
 
         float totalDigSpeed = 0;
         int totalBlocks = 0;
+        int durability = heldItem.getMaxDamage() - heldItem.getDamage();
         for(BlockPos orePos : explored)
         {
             state = world.getBlockState(orePos);
@@ -243,6 +248,10 @@ public class OreEaterEnchantment extends Enchantment
             {
                 totalDigSpeed += ExcavatorEnchantment.getDigSpeed(player, state, orePos);
                 totalBlocks++;
+            }
+            if(totalBlocks >= durability)
+            {
+                break;
             }
         }
 
