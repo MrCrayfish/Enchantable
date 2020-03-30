@@ -68,7 +68,6 @@ public class ExcavatorEnchantment extends Enchantment
     public static void onPlayerMineSpeed(PlayerEvent.BreakSpeed event)
     {
         float effectiveSpeed = getEffectiveDigSpeed(event.getPlayer(), event.getPos());
-        System.out.println(effectiveSpeed);
         if(effectiveSpeed > 0)
         {
             event.setNewSpeed(effectiveSpeed);
@@ -78,7 +77,7 @@ public class ExcavatorEnchantment extends Enchantment
     /**
      * Gets the effective speed when using the excavator enchantment. Essentially gets the average
      * speed and divides it by the number of blocks it can effectively mine.
-     * 
+     *
      * @param player the player mining the blocks
      * @param pos the position of the block being targeted
      * @return the effective speed
