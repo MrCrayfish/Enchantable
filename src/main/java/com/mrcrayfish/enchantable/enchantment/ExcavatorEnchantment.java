@@ -235,13 +235,13 @@ public class ExcavatorEnchantment extends Enchantment
             function = pair -> pos.add(pair.getLeft() - (size - 1) / 2, 0, pair.getRight() - (size - 1) / 2);
         }
 
-        int damageAmount = destroyBlocks(world, pos, player, size, toolTypes, function);
+        int damageAmount = destroyBlocks(world, pos, player, size, toolTypes, heldItem, function);
 
         /* Handles applying damage to the tool and considers if it has an unbreaking enchantment */
         heldItem.attemptDamageItem(damageAmount, world.rand, (ServerPlayerEntity) player);
     }
 
-    private static int destroyBlocks(World world, BlockPos source, PlayerEntity player, int size, Set<ToolType> toolTypes, Function<Pair<Integer, Integer>, BlockPos> function)
+    private static int destroyBlocks(World world, BlockPos source, PlayerEntity player, int size, Set<ToolType> toolTypes, ItemStack stack, Function<Pair<Integer, Integer>, BlockPos> function)
     {
         int damageAmount = 0;
         for(int i = 0; i < size; i++)
@@ -253,7 +253,7 @@ public class ExcavatorEnchantment extends Enchantment
                 {
                     continue;
                 }
-                if(destroyBlock(world, toolTypes, newPos, true, player))
+                if(destroyBlock(world, toolTypes, newPos, true, stack, player))
                 {
                     damageAmount++;
                 }
@@ -262,7 +262,7 @@ public class ExcavatorEnchantment extends Enchantment
         return damageAmount;
     }
 
-    private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, PlayerEntity player)
+    private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, ItemStack stack, PlayerEntity player)
     {
         BlockState blockState = world.getBlockState(pos);
         if(blockState.isAir(world, pos))
@@ -279,7 +279,7 @@ public class ExcavatorEnchantment extends Enchantment
             if(spawnDrops)
             {
                 TileEntity tileEntity = blockState.hasTileEntity() ? world.getTileEntity(pos) : null;
-                Block.spawnDrops(blockState, world, pos, tileEntity, player, ItemStack.EMPTY);
+                Block.spawnDrops(blockState, world, pos, tileEntity, player, stack);
             }
             return world.setBlockState(pos, fluidState.getBlockState(), 3);
         }
