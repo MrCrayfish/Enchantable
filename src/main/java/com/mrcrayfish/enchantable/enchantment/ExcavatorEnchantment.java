@@ -64,7 +64,7 @@ public class ExcavatorEnchantment extends Enchantment
     @Override
     public boolean canApplyTogether(Enchantment enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != Enchantments.SILK_TOUCH;
+        return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != Enchantments.SILK_TOUCH && enchantment != ModEnchantments.ORE_EATER.get();
     }
 
     @Override
@@ -286,7 +286,7 @@ public class ExcavatorEnchantment extends Enchantment
         return false;
     }
 
-    private static boolean isToolEffective(Set<ToolType> toolTypes, BlockState state, PlayerEntity player, World world, BlockPos pos)
+    public static boolean isToolEffective(Set<ToolType> toolTypes, BlockState state, PlayerEntity player, World world, BlockPos pos)
     {
         if(toolTypes.stream().noneMatch(toolType -> state.getBlock().isToolEffective(state, toolType)))
         {
@@ -295,7 +295,7 @@ public class ExcavatorEnchantment extends Enchantment
         return net.minecraftforge.common.ForgeHooks.canHarvestBlock(state, player, world, pos);
     }
 
-    private static float getDigSpeed(PlayerEntity player, BlockState state, @Nullable BlockPos pos)
+    public static float getDigSpeed(PlayerEntity player, BlockState state, @Nullable BlockPos pos)
     {
         float destroySpeed = player.inventory.getDestroySpeed(state);
         if(destroySpeed > 1.0F)

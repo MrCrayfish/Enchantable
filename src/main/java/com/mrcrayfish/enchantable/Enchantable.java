@@ -7,10 +7,7 @@ import net.minecraft.block.CropsBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShovelItem;
+import net.minecraft.item.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,6 +24,7 @@ public class Enchantable
 {
     public static final EnchantmentType HOE = EnchantmentType.create(Reference.MOD_ID + ":hoe", item -> item.getItem() instanceof HoeItem);
     public static final EnchantmentType TILLABLE = EnchantmentType.create(Reference.MOD_ID + ":tillable", item -> item.getItem() instanceof HoeItem || item.getItem() instanceof ShovelItem);
+    public static final EnchantmentType PICKAXE = EnchantmentType.create(Reference.MOD_ID + ":pickaxe", item -> item.getItem() instanceof PickaxeItem);
 
     public Enchantable()
     {
@@ -35,7 +33,7 @@ public class Enchantable
         MinecraftForge.EVENT_BUS.register(this);
 
         /* Patches tools group to include new enchantment types */
-        this.addEnchantmentTypesToGroup(ItemGroup.TOOLS, HOE, TILLABLE);
+        this.addEnchantmentTypesToGroup(ItemGroup.TOOLS, HOE, TILLABLE, PICKAXE);
     }
 
     private void addEnchantmentTypesToGroup(ItemGroup group, EnchantmentType ... types)

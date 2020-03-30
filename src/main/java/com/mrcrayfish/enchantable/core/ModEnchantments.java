@@ -19,4 +19,5 @@ public class ModEnchantments
     public static final RegistryObject<Enchantment> SEEDER = REGISTER.register("replanting", SeederEnchantment::new);
     public static final RegistryObject<Enchantment> CULTIVATOR = REGISTER.register("cultivator", CultivatorEnchantment::new);
     public static final RegistryObject<Enchantment> EXCAVATOR = REGISTER.register("excavator", ExcavatorEnchantment::new);
+    public static final RegistryObject<Enchantment> ORE_EATER = REGISTER.register("ore_eater", OreEaterEnchantment::new);
 }
