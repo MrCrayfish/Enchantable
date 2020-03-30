@@ -124,6 +124,11 @@ public class ExcavatorEnchantment extends Enchantment
             return 0;
         }
 
+        if(blockState.getBlock() instanceof OreBlock)
+        {
+            return 0;
+        }
+
         int totalBlocks = 0;
         int totalTicks = 0;
         Direction.Axis axis = direction.getAxis();
@@ -217,6 +222,11 @@ public class ExcavatorEnchantment extends Enchantment
 
         BlockState blockState = world.getBlockState(pos);
         if(!isToolEffective(toolTypes, blockState, player, world, pos))
+        {
+            return;
+        }
+
+        if(blockState.getBlock() instanceof OreBlock)
         {
             return;
         }
