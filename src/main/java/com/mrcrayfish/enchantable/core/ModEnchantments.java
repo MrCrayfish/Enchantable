@@ -1,10 +1,7 @@
 package com.mrcrayfish.enchantable.core;
 
 import com.mrcrayfish.enchantable.Reference;
-import com.mrcrayfish.enchantable.enchantment.CultivatorEnchantment;
-import com.mrcrayfish.enchantable.enchantment.IronSkullEnchantment;
-import com.mrcrayfish.enchantable.enchantment.ReplantingEnchantment;
-import com.mrcrayfish.enchantable.enchantment.StompingEnchantment;
+import com.mrcrayfish.enchantable.enchantment.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.item.HoeItem;
@@ -27,5 +24,5 @@ public class ModEnchantments
     public static final RegistryObject<Enchantment> IRON_SKULL = REGISTER.register("iron_skull", IronSkullEnchantment::new);
     public static final RegistryObject<Enchantment> REPLANTING = REGISTER.register("replanting", ReplantingEnchantment::new);
     public static final RegistryObject<Enchantment> CULTIVATOR = REGISTER.register("cultivator", CultivatorEnchantment::new);
-    public static final RegistryObject<Enchantment> EXCAVATOR = REGISTER.register("excavator", CultivatorEnchantment::new);
+    public static final RegistryObject<Enchantment> EXCAVATOR = REGISTER.register("excavator", ExcavatorEnchantment::new);
 }
