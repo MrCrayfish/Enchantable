@@ -9,7 +9,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
@@ -39,9 +38,9 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ExcavatorEnchantment extends Enchantment
 {
-    public static final int SIZE = 3;
+    public static final int BASE_SIZE = 3;
 
-    protected ExcavatorEnchantment()
+    public ExcavatorEnchantment()
     {
         super(Rarity.VERY_RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
     }
@@ -62,6 +61,12 @@ public class ExcavatorEnchantment extends Enchantment
     public boolean canApplyTogether(Enchantment enchantment)
     {
         return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != Enchantments.SILK_TOUCH;
+    }
+
+    @Override
+    public int getMaxLevel()
+    {
+        return 2;
     }
 
     @SubscribeEvent
@@ -92,6 +97,9 @@ public class ExcavatorEnchantment extends Enchantment
             return 0;
         }
 
+        int level = EnchantmentHelper.getEnchantments(heldItem).get(ModEnchantments.EXCAVATOR.get());
+        int size = BASE_SIZE + Math.max(0, level - 1) * 2;
+
         Direction direction = Direction.getFacingDirections(player)[0];
         World world = player.getEntityWorld();
 
@@ -113,17 +121,17 @@ public class ExcavatorEnchantment extends Enchantment
         if(axis.isHorizontal())
         {
             direction = direction.rotateY();
-            for(int i = 0; i < SIZE; i++)
+            for(int i = 0; i < size; i++)
             {
-                for(int j = 0; j < SIZE; j++)
+                for(int j = 0; j < size; j++)
                 {
-                    BlockPos blockPos = pos.add(direction.getAxis().getCoordinate(i - (SIZE - 1) / 2, 0, 0), j - (SIZE - 1) / 2, direction.getAxis().getCoordinate(0, 0, i - (SIZE - 1) / 2));
+                    BlockPos blockPos = pos.add(direction.getAxis().getCoordinate(i - (size - 1) / 2, 0, 0), j - (size - 1) / 2, direction.getAxis().getCoordinate(0, 0, i - (size - 1) / 2));
                     blockState = world.getBlockState(blockPos);
-                    if(blockState.isAir(world, pos))
+                    if(blockState.isAir(world, blockPos))
                     {
                         continue;
                     }
-                    if(isToolEffective(toolTypes, blockState, player, world, pos))
+                    if(isToolEffective(toolTypes, blockState, player, world, blockPos))
                     {
                         totalTicks += getDigSpeed(player, blockState, pos);
                         totalBlocks++;
@@ -133,23 +141,27 @@ public class ExcavatorEnchantment extends Enchantment
         }
         else
         {
-            for(int i = 0; i < SIZE; i++)
+            for(int i = 0; i < size; i++)
             {
-                for(int j = 0; j < SIZE; j++)
+                for(int j = 0; j < size; j++)
                 {
-                    BlockPos blockPos = pos.add(i - (SIZE - 1) / 2, 0, j - (SIZE - 1) / 2);
+                    BlockPos blockPos = pos.add(i - (size - 1) / 2, 0, j - (size - 1) / 2);
                     blockState = world.getBlockState(blockPos);
-                    if(blockState.isAir(world, pos))
+                    if(blockState.isAir(world, blockPos))
                     {
                         continue;
                     }
-                    if(isToolEffective(toolTypes, blockState, player, world, pos))
+                    if(isToolEffective(toolTypes, blockState, player, world, blockPos))
                     {
                         totalTicks += getDigSpeed(player, blockState, pos);
                         totalBlocks++;
                     }
                 }
             }
+        }
+        if(totalBlocks <= 0)
+        {
+            return 0;
         }
         return (totalTicks / (float) totalBlocks) / (float) totalBlocks;
     }
@@ -164,6 +176,9 @@ public class ExcavatorEnchantment extends Enchantment
         {
             return;
         }
+
+        int level = EnchantmentHelper.getEnchantments(heldItem).get(ModEnchantments.EXCAVATOR.get());
+        int size = BASE_SIZE + Math.max(0, level - 1) * 2;
 
         PlayerEntity player = event.getPlayer();
         Direction direction = Direction.getFacingDirections(event.getPlayer())[0];
@@ -183,7 +198,6 @@ public class ExcavatorEnchantment extends Enchantment
         }
 
         int damageAmount = 0;
-        int size = 3;
         Direction.Axis axis = direction.getAxis();
         if(axis.isHorizontal())
         {
