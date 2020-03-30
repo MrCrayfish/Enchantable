@@ -57,7 +57,7 @@ public class Enchantable
             if(heldItem.isEmpty())
                 return;
 
-            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING.get()) && !EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR.get()))
+            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.SEEDER.get()) && !EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR.get()))
                 return;
 
             CropsBlock crop = (CropsBlock) state.getBlock();

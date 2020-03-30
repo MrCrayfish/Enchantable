@@ -9,12 +9,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -93,7 +91,7 @@ public class CultivatorEnchantment extends Enchantment
             if(heldItem.isEmpty())
                 return;
 
-            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING.get()))
+            if(EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.SEEDER.get()))
                 return;
 
             if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.CULTIVATOR.get()))

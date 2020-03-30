@@ -6,7 +6,6 @@ import com.mrcrayfish.enchantable.core.ModEnchantments;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
@@ -14,11 +13,8 @@ import net.minecraft.item.HoeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.concurrent.TickDelayedTask;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.world.BlockEvent;
@@ -33,9 +29,9 @@ import java.util.List;
  * Author: MrCrayfish
  */
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class ReplantingEnchantment extends Enchantment
+public class SeederEnchantment extends Enchantment
 {
-    public ReplantingEnchantment()
+    public SeederEnchantment()
     {
         super(Rarity.RARE, Enchantable.HOE, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
     }
@@ -67,7 +63,7 @@ public class ReplantingEnchantment extends Enchantment
             if(heldItem.isEmpty())
                 return;
 
-            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.REPLANTING.get()))
+            if(!EnchantmentHelper.getEnchantments(heldItem).containsKey(ModEnchantments.SEEDER.get()))
                 return;
 
             World world = event.getPlayer().getEntityWorld();
@@ -78,12 +74,12 @@ public class ReplantingEnchantment extends Enchantment
                 {
                     BlockPos cropPos = pos.add(i / 3, 0, i % 3);
                     BlockState state = world.getBlockState(cropPos);
-                    ReplantingEnchantment.replantCrop(state, world, cropPos, event.getPlayer(), event.getPos());
+                    SeederEnchantment.replantCrop(state, world, cropPos, event.getPlayer(), event.getPos());
                 }
             }
             else
             {
-                ReplantingEnchantment.replantCrop(event.getState(), world, event.getPos(), event.getPlayer(), event.getPos());
+                SeederEnchantment.replantCrop(event.getState(), world, event.getPos(), event.getPlayer(), event.getPos());
             }
         }
     }
