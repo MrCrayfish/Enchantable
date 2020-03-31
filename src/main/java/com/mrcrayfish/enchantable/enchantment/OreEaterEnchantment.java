@@ -10,7 +10,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -26,6 +25,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -96,31 +96,11 @@ public class OreEaterEnchantment extends Enchantment
             return;
         }
 
-        Block targetBlock = state.getBlock();
-        Queue<OreEntry> queue = new LinkedList<>();
-        Set<BlockPos> explored = new LinkedHashSet<>();
-        OreEntry start = new OreEntry(pos, 2 + Math.max(0, level - 1) * 2);
-        queue.add(start);
-        explored.add(pos);
-
-        while(!queue.isEmpty())
-        {
-            OreEntry oreEntry = queue.remove();
-            if(oreEntry.distance - 1 > 0)
-            {
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.north(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.east(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.south(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.west(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.up(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.down(), queue, explored, oreEntry.distance - 1);
-            }
-            explored.add(oreEntry.pos);
-        }
-
         int damageAmount = 0;
         int durability = heldItem.getMaxDamage() - heldItem.getDamage();
-        for(BlockPos orePos : explored)
+        Block targetBlock = state.getBlock();
+        Set<BlockPos> orePositions = gatherBlocks(targetBlock, world, pos, 2 + Math.max(0, level - 1) * 2);
+        for(BlockPos orePos : orePositions)
         {
             if(destroyBlock(world, toolTypes, orePos, true, heldItem, player))
             {
@@ -134,18 +114,6 @@ public class OreEaterEnchantment extends Enchantment
 
         /* Handles applying damage to the tool and considers if it has an unbreaking enchantment */
         heldItem.damageItem(damageAmount, player, player1 -> player1.sendBreakAnimation(Hand.MAIN_HAND));
-    }
-
-    private static void getNeighbouringOre(Block targetBlock, World world, BlockPos pos, Queue<OreEntry> queue, Set<BlockPos> explored, int distance)
-    {
-        BlockState state = world.getBlockState(pos);
-        if(state.getBlock() == targetBlock)
-        {
-            if(!explored.contains(pos))
-            {
-                queue.offer(new OreEntry(pos, distance));
-            }
-        }
     }
 
     private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, ItemStack stack, PlayerEntity player)
@@ -216,32 +184,12 @@ public class OreEaterEnchantment extends Enchantment
             return 0;
         }
 
-        Block targetBlock = state.getBlock();
-        Queue<OreEntry> queue = new LinkedList<>();
-        Set<BlockPos> explored = new HashSet<>();
-        OreEntry start = new OreEntry(pos, 2 + Math.max(0, level - 1) * 2);
-        queue.add(start);
-        explored.add(pos);
-
-        while(!queue.isEmpty())
-        {
-            OreEntry oreEntry = queue.remove();
-            if(oreEntry.distance - 1 > 0)
-            {
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.north(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.east(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.south(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.west(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.up(), queue, explored, oreEntry.distance - 1);
-                getNeighbouringOre(targetBlock, world, oreEntry.pos.down(), queue, explored, oreEntry.distance - 1);
-            }
-            explored.add(oreEntry.pos);
-        }
-
         float totalDigSpeed = 0;
         int totalBlocks = 0;
         int durability = heldItem.getMaxDamage() - heldItem.getDamage();
-        for(BlockPos orePos : explored)
+        Block targetBlock = state.getBlock();
+        Set<BlockPos> orePositions = gatherBlocks(targetBlock, world, pos, 2 + Math.max(0, level - 1) * 2);
+        for(BlockPos orePos : orePositions)
         {
             state = world.getBlockState(orePos);
             if(ExcavatorEnchantment.isToolEffective(toolTypes, state, player, world, orePos))
@@ -262,15 +210,75 @@ public class OreEaterEnchantment extends Enchantment
         return (totalDigSpeed / (float) totalBlocks) / (float) totalBlocks;
     }
 
-    private static class OreEntry
+    /**
+     * Gathers a set of surrounding blocks of the same type starting from an initial block position.
+     * The search uses a modified breadth first search that limits the depth.
+     *
+     * @param targetBlock The block to search for. It can be null to search for all blocks
+     * @param world       The world to search for blocks
+     * @param pos         The starting position of the search
+     * @param depth       The depth limit of the search
+     * @return A set of block positions
+     */
+    private static Set<BlockPos> gatherBlocks(@Nullable Block targetBlock, World world, BlockPos pos, int depth)
+    {
+        Queue<BlockEntry> queue = new LinkedList<>();
+        Set<BlockPos> explored = new LinkedHashSet<>();
+        queue.add(new BlockEntry(pos, depth));
+        explored.add(pos);
+        while(!queue.isEmpty())
+        {
+            BlockEntry entry = queue.remove();
+            if(entry.depth - 1 > 0)
+            {
+                addMatchingBlockToQueue(targetBlock, world, entry.pos.north(), queue, explored, entry.depth - 1);
+                addMatchingBlockToQueue(targetBlock, world, entry.pos.east(), queue, explored, entry.depth - 1);
+                addMatchingBlockToQueue(targetBlock, world, entry.pos.south(), queue, explored, entry.depth - 1);
+                addMatchingBlockToQueue(targetBlock, world, entry.pos.west(), queue, explored, entry.depth - 1);
+                addMatchingBlockToQueue(targetBlock, world, entry.pos.up(), queue, explored, entry.depth - 1);
+                addMatchingBlockToQueue(targetBlock, world, entry.pos.down(), queue, explored, entry.depth - 1);
+            }
+            explored.add(entry.pos);
+        }
+        return explored;
+    }
+
+    /**
+     * Adds the matching block at the specified position to the provided queue. This is used in
+     * conjunction with {@link OreEaterEnchantment#gatherBlocks} to search for blocks.
+     *
+     * @param targetBlock The block to search for. It can be null to search for all blocks
+     * @param world       The world to search for blocks
+     * @param pos         The position to test
+     * @param queue       A queue of block entries that have not been searched
+     * @param explored    A set of block position that have been searched
+     * @param depth       The new depth limit
+     */
+    private static void addMatchingBlockToQueue(@Nullable Block targetBlock, World world, BlockPos pos, Queue<BlockEntry> queue, Set<BlockPos> explored, int depth)
+    {
+        BlockState state = world.getBlockState(pos);
+        if(state.isAir(world, pos))
+        {
+            return;
+        }
+        if(targetBlock == null || state.getBlock() == targetBlock)
+        {
+            if(!explored.contains(pos))
+            {
+                queue.offer(new BlockEntry(pos, depth));
+            }
+        }
+    }
+
+    private static class BlockEntry
     {
         private BlockPos pos;
-        private int distance;
+        private int depth;
 
-        public OreEntry(BlockPos pos, int distance)
+        private BlockEntry(BlockPos pos, int depth)
         {
             this.pos = pos;
-            this.distance = distance;
+            this.depth = depth;
         }
 
         public BlockPos getPos()
@@ -278,9 +286,9 @@ public class OreEaterEnchantment extends Enchantment
             return pos;
         }
 
-        public int getDistance()
+        public int getDepth()
         {
-            return distance;
+            return depth;
         }
 
         @Override
@@ -288,8 +296,8 @@ public class OreEaterEnchantment extends Enchantment
         {
             if(this == o) return true;
             if(o == null || getClass() != o.getClass()) return false;
-            OreEntry oreEntry = (OreEntry) o;
-            return Objects.equals(pos, oreEntry.pos);
+            BlockEntry blockEntry = (BlockEntry) o;
+            return Objects.equals(pos, blockEntry.pos);
         }
 
         @Override
