@@ -1,0 +1,16 @@
+{
+    "enchantment.enchantable.stomping": "Caduta Terremoto",
+    "enchantment.enchantable.iron_skull": "Teschio di Ferro",
+    "enchantment.enchantable.replanting": "Auto-pianto",
+    "enchantment.enchantable.cultivator": "Coltivatore",
+    "enchantment.enchantable.excavator": "Escavatore",
+    "enchantment.enchantable.ore_eater": "Mangia Minerali",
+
+    "subtitle.enchantable.player.stomp": "Caduta",
+
+    "enchantment.enchantable.stomping.desc": "Manda una porzione del tuo danno di caduta ai mob in un area di 5 blocchi.",
+    "enchantment.enchantable.iron_skull.desc": "Non si prende danno se ci si schianta contro un muro con Elitre.",
+    "enchantment.enchantable.replanting.desc": "Ripianta i semi quando rompi le piante.",
+    "enchantment.enchantable.cultivator.desc": "Le zappe funzionano su un area 3x3. Funziona anche per distruggere le piante.",
+    "enchantment.enchantable.excavator.desc": "Distrugge un area 3x3. Funziona con picconi, asce e palette."
+}
