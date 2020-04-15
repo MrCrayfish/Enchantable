@@ -3,7 +3,7 @@ loaderVersion="[31,)"
 
 [[mods]]
 modId="enchantable"
-version="1.2.0"
+version="1.2.1"
 displayName="Enchantable"
 updateJSONURL="https://raw.githubusercontent.com/MrCrayfish/MiniMods/enchantable/update.json"
 displayURL="https://mrcrayfish.com/minimods"
