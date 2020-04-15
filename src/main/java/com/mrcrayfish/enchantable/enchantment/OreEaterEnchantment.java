@@ -238,7 +238,7 @@ public class OreEaterEnchantment extends Enchantment
      * @param depth       The depth limit of the search
      * @return A set of block positions
      */
-    private static Set<BlockPos> gatherBlocks(@Nullable Block targetBlock, World world, BlockPos pos, int depth)
+    public static Set<BlockPos> gatherBlocks(@Nullable Block targetBlock, World world, BlockPos pos, int depth)
     {
         Queue<BlockEntry> queue = new LinkedList<>();
         Set<BlockPos> explored = new LinkedHashSet<>();
