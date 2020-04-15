@@ -13,6 +13,7 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
@@ -149,6 +150,13 @@ public class ExcavatorEnchantment extends Enchantment
         {
             return 0;
         }
+
+        EffectInstance instance = player.getActivePotionEffect(Effects.HASTE);
+        if(instance != null)
+        {
+            totalDigSpeed *= (instance.getAmplifier() + 1);
+        }
+
         return (totalDigSpeed / (float) totalBlocks) / (float) totalBlocks;
     }
 

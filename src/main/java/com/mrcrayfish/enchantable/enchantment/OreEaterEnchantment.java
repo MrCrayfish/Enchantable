@@ -14,6 +14,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolItem;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -216,6 +218,13 @@ public class OreEaterEnchantment extends Enchantment
         {
             return 0;
         }
+
+        EffectInstance instance = player.getActivePotionEffect(Effects.HASTE);
+        if(instance != null)
+        {
+            totalBlocks = (int) (totalBlocks * (instance.getAmplifier() * 0.5));
+        }
+
         return (totalDigSpeed / (float) totalBlocks) / (float) totalBlocks;
     }
 
