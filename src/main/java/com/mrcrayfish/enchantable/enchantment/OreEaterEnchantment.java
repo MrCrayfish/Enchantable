@@ -60,7 +60,7 @@ public class OreEaterEnchantment extends Enchantment
     @Override
     public boolean canApplyTogether(Enchantment enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != Enchantments.SILK_TOUCH && enchantment != ModEnchantments.EXCAVATOR.get();
+        return super.canApplyTogether(enchantment) && enchantment != ModEnchantments.EXCAVATOR.get();
     }
 
     @SubscribeEvent
