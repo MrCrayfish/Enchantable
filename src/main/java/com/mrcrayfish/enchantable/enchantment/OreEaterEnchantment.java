@@ -5,7 +5,6 @@ import com.mrcrayfish.enchantable.Reference;
 import com.mrcrayfish.enchantable.core.ModEnchantments;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.OreBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -19,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -80,7 +80,7 @@ public class OreEaterEnchantment extends Enchantment
         BlockPos pos = event.getPos();
 
         BlockState state = world.getBlockState(pos);
-        if(!(state.getBlock() instanceof OreBlock))
+        if(!state.getBlock().isIn(Tags.Blocks.ORES))
         {
             return;
         }
@@ -188,7 +188,7 @@ public class OreEaterEnchantment extends Enchantment
             return 0;
         }
 
-        if(!(state.getBlock() instanceof OreBlock))
+        if(!state.getBlock().isIn(Tags.Blocks.ORES))
         {
             return 0;
         }

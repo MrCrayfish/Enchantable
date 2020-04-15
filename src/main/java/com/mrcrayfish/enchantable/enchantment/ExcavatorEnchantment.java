@@ -305,7 +305,10 @@ public class ExcavatorEnchantment extends Enchantment
     {
         if(toolTypes.stream().noneMatch(toolType -> state.getBlock().isToolEffective(state, toolType)))
         {
-            return false;
+            if(state.getMaterial().isToolNotRequired())
+            {
+                return false;
+            }
         }
         return net.minecraftforge.common.ForgeHooks.canHarvestBlock(state, player, world, pos);
     }
