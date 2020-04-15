@@ -65,7 +65,7 @@ public class ExcavatorEnchantment extends Enchantment
     @Override
     public boolean canApplyTogether(Enchantment enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != Enchantments.SILK_TOUCH && enchantment != ModEnchantments.ORE_EATER.get();
+        return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != ModEnchantments.ORE_EATER.get();
     }
 
     @Override
