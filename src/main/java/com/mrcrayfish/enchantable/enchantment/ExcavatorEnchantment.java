@@ -4,13 +4,11 @@ import com.mrcrayfish.enchantable.Reference;
 import com.mrcrayfish.enchantable.core.ModEnchantments;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.OreBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -25,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -127,7 +126,7 @@ public class ExcavatorEnchantment extends Enchantment
             return 0;
         }
 
-        if(blockState.getBlock() instanceof OreBlock)
+        if(blockState.getBlock().isIn(Tags.Blocks.ORES))
         {
             return 0;
         }
@@ -170,7 +169,7 @@ public class ExcavatorEnchantment extends Enchantment
                 }
                 if(isToolEffective(toolTypes, blockState, player, world, blockPos))
                 {
-                    if(blockState.getBlock() instanceof OreBlock)
+                    if(blockState.getBlock().isIn(Tags.Blocks.ORES))
                     {
                         continue;
                     }
@@ -225,7 +224,7 @@ public class ExcavatorEnchantment extends Enchantment
             return;
         }
 
-        if(blockState.getBlock() instanceof OreBlock)
+        if(blockState.getBlock().isIn(Tags.Blocks.ORES))
         {
             return;
         }
@@ -286,7 +285,7 @@ public class ExcavatorEnchantment extends Enchantment
         }
         if(isToolEffective(toolTypes, blockState, player, world, pos))
         {
-            if(blockState.getBlock() instanceof OreBlock)
+            if(blockState.getBlock().isIn(Tags.Blocks.ORES))
             {
                 return false;
             }
