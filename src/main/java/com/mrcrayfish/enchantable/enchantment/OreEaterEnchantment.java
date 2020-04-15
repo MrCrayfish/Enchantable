@@ -126,12 +126,21 @@ public class OreEaterEnchantment extends Enchantment
         if(ExcavatorEnchantment.isToolEffective(toolTypes, blockState, player, world, pos))
         {
             IFluidState fluidState = world.getFluidState(pos);
-            if(spawnDrops)
+            if(spawnDrops && !player.isCreative())
             {
                 TileEntity tileEntity = blockState.hasTileEntity() ? world.getTileEntity(pos) : null;
-                Block.spawnDrops(blockState, world, pos, tileEntity, player, stack);
+                blockState.getBlock().harvestBlock(world, player, pos, blockState, tileEntity, stack);
             }
-            return world.setBlockState(pos, fluidState.getBlockState(), 3);
+            int fortuneLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+            int silkLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack);
+            int exp = blockState.getExpDrop(world, pos, fortuneLevel, silkLevel);
+            if(world.setBlockState(pos, fluidState.getBlockState(), 3))
+            {
+                if(!player.isCreative())
+                {
+                    blockState.getBlock().dropXpOnBlockBreak(world, pos, exp);
+                }
+            }
         }
         return false;
     }
