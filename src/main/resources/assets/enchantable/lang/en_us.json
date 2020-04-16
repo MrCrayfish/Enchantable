@@ -12,5 +12,6 @@
     "enchantment.enchantable.iron_skull.desc": "Prevents damage caused by flying into a wall with an elytra.",
     "enchantment.enchantable.replanting.desc": "Replants seeds as you break crops.",
     "enchantment.enchantable.cultivator.desc": "Tills a 3x3 area rather than a single block. Also works for harvesting crops.",
-    "enchantment.enchantable.excavator.desc": "Allows you to dig a 3x3 area. This can be applied to pickaxes, axes, and shovels"
+    "enchantment.enchantable.excavator.desc": "Allows a tool to mine/break a 3x3 or 5x5 area.",
+    "enchantment.enchantable.ore_eater.desc": "Helps you mine ores faster by breaking multiple blocks at a time. The higher the level, the more ores will be broken."
 }
