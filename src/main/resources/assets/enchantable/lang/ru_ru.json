@@ -3,11 +3,15 @@
     "enchantment.enchantable.iron_skull": "Железный череп",
     "enchantment.enchantable.replanting": "Пересев",
     "enchantment.enchantable.cultivator": "Культиватор",
+    "enchantment.enchantable.excavator": "Экскаватор",
+    "enchantment.enchantable.ore_eater": "Пожиратель руд",
 
     "subtitle.enchantable.player.stomp": "Топот",
 
     "enchantment.enchantable.stomping.desc": "Перенаправляет часть урона от падения на мобов в радиусе пяти блоков.",
     "enchantment.enchantable.iron_skull.desc": "Убирает урон при влетании в стену на элитрах.",
     "enchantment.enchantable.replanting.desc": "Пересаживает семена, когда вы разбиваете урожай.",
-    "enchantment.enchantable.cultivator.desc": "Увеличивает площадь вспахивания на 3x3. Также работает для сбора урожая."
+    "enchantment.enchantable.cultivator.desc": "Увеличивает площадь вспахивания на 3x3. Также работает для сбора урожая.",
+    "enchantment.enchantable.excavator.desc": "Позволяет инструменту добывать/разрушать область 3х3 или 5х5.",
+    "enchantment.enchantable.ore_eater.desc": "Помогает добывать руды быстрее, разрушая несколько блоков за раз. Чем выше уровень, тем больше руд будет разрушено."
 }
