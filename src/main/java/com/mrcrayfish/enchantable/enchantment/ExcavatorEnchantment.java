@@ -217,7 +217,7 @@ public class ExcavatorEnchantment extends Enchantment
 
         PlayerEntity player = event.getPlayer();
         Direction direction = Direction.getFacingDirections(event.getPlayer())[0];
-        double reach = 2.8;
+        double reach = Objects.requireNonNull(player.getAttribute(ForgeMod.REACH_DISTANCE.get())).getValue();
         RayTraceResult result = player.pick(reach, 0, false);
         if(result.getType() == RayTraceResult.Type.BLOCK)
         {
