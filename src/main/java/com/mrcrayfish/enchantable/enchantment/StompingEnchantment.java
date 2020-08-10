@@ -17,7 +17,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +25,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class StompingEnchantment extends Enchantment
     }
 
     @Override
-    protected boolean canApplyTogether(Enchantment enchantment)
+    protected boolean canApplyTogether(@Nonnull Enchantment enchantment)
     {
         if(enchantment instanceof ProtectionEnchantment)
         {
@@ -118,15 +119,15 @@ public class StompingEnchantment extends Enchantment
                                 /* Spawns particles and plays a stomp sound at the location of the living entity */
                                 if(livingEntity.world instanceof ServerWorld)
                                 {
-                                    BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
+                                    BlockState state = livingEntity.world.getBlockState(livingEntity.func_233580_cy_() /*getPosition()*/.down());
                                     ServerWorld serverWorld = (ServerWorld) livingEntity.world;
-                                    serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), 50, 0, 0, 0, (double) 0.15F);
+                                    serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), 50, 0, 0, 0, 0.15F);
                                     serverWorld.playSound(null, livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), ModSounds.ENTITY_PLAYER_STOMP, SoundCategory.PLAYERS, 1.0F, 1.0F);
                                 }
 
                                 /* Cause the entity to bop up into the air */
                                 double stompStrength = 0.3 * (level / 4.0);
-                                Vec3d direction = new Vec3d(livingEntity.getPosX() - player.getPosX(), 0, livingEntity.getPosZ() - player.getPosZ()).normalize();
+                                Vector3d direction = new Vector3d(livingEntity.getPosX() - player.getPosX(), 0, livingEntity.getPosZ() - player.getPosZ()).normalize();
                                 livingEntity.setMotion(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.addVelocity(direction.x * stompStrength, stompStrength, direction.z * stompStrength);
                                 livingEntity.velocityChanged = true;

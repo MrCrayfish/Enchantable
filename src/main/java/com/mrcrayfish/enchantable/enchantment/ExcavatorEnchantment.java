@@ -8,8 +8,9 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,9 +33,13 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -43,6 +49,7 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ExcavatorEnchantment extends Enchantment
 {
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final int BASE_SIZE = 3;
 
     public ExcavatorEnchantment()
@@ -63,7 +70,7 @@ public class ExcavatorEnchantment extends Enchantment
     }
 
     @Override
-    public boolean canApplyTogether(Enchantment enchantment)
+    public boolean canApplyTogether(@Nonnull Enchantment enchantment)
     {
         return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != ModEnchantments.ORE_EATER.get();
     }
@@ -107,7 +114,7 @@ public class ExcavatorEnchantment extends Enchantment
 
         World world = player.getEntityWorld();
         Direction direction = Direction.getFacingDirections(player)[0];
-        double reach = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+        double reach = Objects.requireNonNull(player.getAttribute(ForgeMod.REACH_DISTANCE.get())).getValue();
         RayTraceResult result = player.pick(reach, 0, false);
         if(result.getType() == RayTraceResult.Type.BLOCK)
         {
@@ -181,7 +188,7 @@ public class ExcavatorEnchantment extends Enchantment
                     {
                         continue;
                     }
-                    totalDigSpeed += getDigSpeed(player, blockState, blockPos);
+                    totalDigSpeed += getDigSpeed(player, blockState);
                     totalBlocks++;
 
                     if(totalBlocks >= durability)
@@ -210,7 +217,7 @@ public class ExcavatorEnchantment extends Enchantment
 
         PlayerEntity player = event.getPlayer();
         Direction direction = Direction.getFacingDirections(event.getPlayer())[0];
-        double reach = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+        double reach = 2.8;
         RayTraceResult result = player.pick(reach, 0, false);
         if(result.getType() == RayTraceResult.Type.BLOCK)
         {
@@ -284,7 +291,8 @@ public class ExcavatorEnchantment extends Enchantment
         return damageAmount;
     }
 
-    private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos, boolean spawnDrops, ItemStack stack, PlayerEntity player)
+    private static boolean destroyBlock(World world, Set<ToolType> toolTypes, BlockPos pos,
+                                        @SuppressWarnings("SameParameterValue") boolean spawnDrops, ItemStack stack, PlayerEntity player)
     {
         BlockState blockState = world.getBlockState(pos);
         if(blockState.isAir(world, pos))
@@ -297,7 +305,7 @@ public class ExcavatorEnchantment extends Enchantment
             {
                 return false;
             }
-            IFluidState fluidState = world.getFluidState(pos);
+            FluidState fluidState = world.getFluidState(pos);
             if(spawnDrops)
             {
                 TileEntity tileEntity = blockState.hasTileEntity() ? world.getTileEntity(pos) : null;
@@ -312,7 +320,8 @@ public class ExcavatorEnchantment extends Enchantment
     {
         if(toolTypes.stream().noneMatch(toolType -> state.getBlock().isToolEffective(state, toolType)))
         {
-            if(state.getMaterial().isToolNotRequired())
+            //if(state.getMaterial().isToolNotRequired())
+            if (state.getHarvestTool() != null)
             {
                 return false;
             }
@@ -320,7 +329,7 @@ public class ExcavatorEnchantment extends Enchantment
         return net.minecraftforge.common.ForgeHooks.canHarvestBlock(state, player, world, pos);
     }
 
-    public static float getDigSpeed(PlayerEntity player, BlockState state, @Nullable BlockPos pos)
+    public static float getDigSpeed(PlayerEntity player, BlockState state)
     {
         float destroySpeed = player.inventory.getDestroySpeed(state);
         if(destroySpeed > 1.0F)
@@ -341,7 +350,7 @@ public class ExcavatorEnchantment extends Enchantment
         if(player.isPotionActive(Effects.MINING_FATIGUE))
         {
             float multiplier;
-            switch(player.getActivePotionEffect(Effects.MINING_FATIGUE).getAmplifier())
+            switch(Objects.requireNonNull(player.getActivePotionEffect(Effects.MINING_FATIGUE)).getAmplifier())
             {
                 case 0:
                     multiplier = 0.3F;
@@ -365,9 +374,16 @@ public class ExcavatorEnchantment extends Enchantment
             destroySpeed /= 5.0F;
         }
 
-        if(!player.onGround)
-        {
-            destroySpeed /= 5.0F;
+        try {
+            Field onGroundField = Entity.class.getDeclaredField("onGround");
+            onGroundField.setAccessible(true);
+            boolean onGround = (boolean) onGroundField.get(player);
+            if(!onGround)
+            {
+                destroySpeed /= 5.0F;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            LOGGER.error("Error while trying to get protected Entity#onGround field.", e);
         }
         return destroySpeed;
     }

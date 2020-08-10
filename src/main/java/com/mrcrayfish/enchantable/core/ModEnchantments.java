@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 public class ModEnchantments
 {
-    public static final DeferredRegister<Enchantment> REGISTER = new DeferredRegister<>(ForgeRegistries.ENCHANTMENTS, Reference.MOD_ID);
+    public static final DeferredRegister<Enchantment> REGISTER = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, Reference.MOD_ID);
 
     public static final RegistryObject<Enchantment> STOMPING = REGISTER.register("stomping", StompingEnchantment::new);
     public static final RegistryObject<Enchantment> IRON_SKULL = REGISTER.register("iron_skull", IronSkullEnchantment::new);

@@ -7,20 +7,20 @@ version="1.3.0"
 displayName="Enchantable"
 updateJSONURL="https://raw.githubusercontent.com/MrCrayfish/MiniMods/enchantable/update.json"
 displayURL="https://mrcrayfish.com/minimods"
-logoFile=""
-credits=""
+#logoFile=""
+#credits=""
 authors="MrCrayfish"
 description="Adds new balanced enchantments that extend improve the vanilla game"
 
 [[dependencies.enchantable]]
     modId="forge"
     mandatory=true
-    versionRange="[31.1.00,)"
+    versionRange="[32,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.enchantable]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2,1.16)"
+    versionRange="[1.16.1]"
     ordering="NONE"
     side="BOTH"
