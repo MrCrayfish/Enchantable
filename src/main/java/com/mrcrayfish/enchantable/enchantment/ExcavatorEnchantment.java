@@ -374,16 +374,9 @@ public class ExcavatorEnchantment extends Enchantment
             destroySpeed /= 5.0F;
         }
 
-        try {
-            Field onGroundField = Entity.class.getDeclaredField("onGround");
-            onGroundField.setAccessible(true);
-            boolean onGround = (boolean) onGroundField.get(player);
-            if(!onGround)
-            {
-                destroySpeed /= 5.0F;
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            LOGGER.error("Error while trying to get protected Entity#onGround field.", e);
+        if(!player.func_233570_aj_())
+        {
+            destroySpeed /= 5.0F;
         }
         return destroySpeed;
     }
