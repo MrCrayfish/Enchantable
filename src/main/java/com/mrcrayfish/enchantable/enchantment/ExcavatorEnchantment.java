@@ -8,7 +8,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -36,8 +35,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -49,7 +46,6 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ExcavatorEnchantment extends Enchantment
 {
-    private static final Logger LOGGER = LogManager.getLogger();
     public static final int BASE_SIZE = 3;
 
     public ExcavatorEnchantment()
@@ -70,7 +66,7 @@ public class ExcavatorEnchantment extends Enchantment
     }
 
     @Override
-    public boolean canApplyTogether(@Nonnull Enchantment enchantment)
+    public boolean canApplyTogether(Enchantment enchantment)
     {
         return super.canApplyTogether(enchantment) && enchantment != Enchantments.FORTUNE && enchantment != ModEnchantments.ORE_EATER.get();
     }

@@ -25,7 +25,6 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +64,7 @@ public class StompingEnchantment extends Enchantment
     }
 
     @Override
-    protected boolean canApplyTogether(@Nonnull Enchantment enchantment)
+    protected boolean canApplyTogether(Enchantment enchantment)
     {
         if(enchantment instanceof ProtectionEnchantment)
         {
@@ -140,9 +139,7 @@ public class StompingEnchantment extends Enchantment
                             }
 
                             /* Damages boots by the amount of mobs that were stomped */
-                            stack.damageItem(entities.size(), player, entity1 -> {
-                                entity1.sendBreakAnimation(EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.FEET.getIndex()));
-                            });
+                            stack.damageItem(entities.size(), player, entity1 -> entity1.sendBreakAnimation(EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, EquipmentSlotType.FEET.getIndex())));
                         }
                     }
                 }
