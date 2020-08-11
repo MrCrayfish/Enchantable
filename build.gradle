@@ -59,18 +59,8 @@ minecraft {
     }
 }
 
-repositories {
-    maven {
-        // Maven for CheatMode
-        name = "justAm0dd3r Maven"
-        url = "https://lookonthebrightsi.de/mc-mods/files/maven/"
-    }
-}
-
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.108'
-    // Directly open creative inventory from the survival mode - for testing purposes
-    runtimeOnly fg.deobf("justAm0dd3r.cheat-mode:cheat_mode-1.16.1:1.1.0")
 }
 
 jar {
