@@ -27,6 +27,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.TickEvent;
@@ -34,10 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -101,7 +99,7 @@ public class ClientEvents
             World world = player.world;
             BlockPos pos = mc.playerController.currentBlock;
             Direction direction = Direction.getFacingDirections(player)[0];
-            double reach = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+            double reach = Objects.requireNonNull(player.getAttribute(ForgeMod.REACH_DISTANCE.get())).getValue();
             RayTraceResult result = player.pick(reach, 0, false);
             if(result.getType() == RayTraceResult.Type.BLOCK)
             {

@@ -9,7 +9,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
@@ -127,7 +127,7 @@ public class OreEaterEnchantment extends Enchantment
         }
         if(ExcavatorEnchantment.isToolEffective(toolTypes, blockState, player, world, pos))
         {
-            IFluidState fluidState = world.getFluidState(pos);
+            FluidState fluidState = world.getFluidState(pos);
             if(spawnDrops && !player.isCreative())
             {
                 TileEntity tileEntity = blockState.hasTileEntity() ? world.getTileEntity(pos) : null;
@@ -205,7 +205,7 @@ public class OreEaterEnchantment extends Enchantment
             state = world.getBlockState(orePos);
             if(ExcavatorEnchantment.isToolEffective(toolTypes, state, player, world, orePos))
             {
-                totalDigSpeed += ExcavatorEnchantment.getDigSpeed(player, state, orePos);
+                totalDigSpeed += ExcavatorEnchantment.getDigSpeed(player, state);
                 totalBlocks++;
             }
             if(totalBlocks >= durability)
