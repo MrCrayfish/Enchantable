@@ -8,9 +8,10 @@
 
     "subtitle.enchantable.player.stomp": "Stampfen",
 
-    "enchantment.enchantable.stomping.desc": "Leitet einen Teil des Fallschadens an Kreaturen in einem Radius von fünf Blöcken weiter.",
+    "enchantment.enchantable.stomping.desc": "Leitet einen Teil des Fallschadens an Kreaturen in einem Radius von f\u00fcnf Bl\u00f6cken weiter.",
     "enchantment.enchantable.iron_skull.desc": "Beugt Schaden vor, der beim fliegen gegen eine Wand mit Elytren entsteht.",
     "enchantment.enchantable.replanting.desc": "Pflanzt Samen beim Ernten von Pflanzen nach.",
-    "enchantment.enchantable.cultivator.desc": "Baut einen 3x3-Bereich ab, anstatt eines einzelnen Blocks. Funktioniert auch für die Ernte von Pflanzen.",
-    "enchantment.enchantable.excavator.desc": "Erlaubt es einen 3x3 Bereich abzubauen. Dieses kann auf Spitzhacken, \u00c4xte und Schaufeln angewendet werden."
+    "enchantment.enchantable.cultivator.desc": "Baut einen 3x3-Bereich ab, anstatt eines einzelnen Blocks. Funktioniert auch f\u00fcr die Ernte von Pflanzen.",
+    "enchantment.enchantable.excavator.desc": "Erlaubt es Werkzeugen einen 3x3 oder 5x5 Bereich abzubauen.",
+	"enchantment.enchantable.ore_eater.desc": "Hilft beim schnelleren abbauen von Erzen durch abbauen mehrerer Bl\u00f6cke auf einmal. Je h\u00f6her das Level, desto mehr Erze werden abgebaut."
 }
