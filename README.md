@@ -2,7 +2,7 @@
 
 # Enchantable
 
-Enchantable is a mod that brings new and balanced enchantments to the game! It expands on aspects of the game where no vanilla enchantments provides benifits but also adds new functionality to existing gameplay. The enchantments are designed to not be overpowered to keep the vanilla feel. Currently Enchantable adds six new enchantments but more will be added over time!
+Enchantable is a mod that brings new and balanced enchantments to the game! It expands on aspects of the game where no vanilla enchantments provide benifits but also adds new functionality to existing gameplay. The enchantments are designed to not be overpowered to keep the vanilla feel. Currently Enchantable adds six new enchantments but more will be added over time!
 
 ### Features:
 
