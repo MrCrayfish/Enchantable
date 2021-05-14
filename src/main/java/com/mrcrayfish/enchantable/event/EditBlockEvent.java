@@ -12,8 +12,8 @@ import net.minecraftforge.eventbus.api.Cancelable;
 @Cancelable
 public class EditBlockEvent extends PlayerEvent
 {
-    private World world;
-    private BlockPos pos;
+    private final World world;
+    private final BlockPos pos;
 
     public EditBlockEvent(PlayerEntity player, World world, BlockPos pos)
     {
