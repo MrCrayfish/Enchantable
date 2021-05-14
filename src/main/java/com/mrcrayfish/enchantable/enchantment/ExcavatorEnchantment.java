@@ -32,8 +32,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -370,7 +368,8 @@ public class ExcavatorEnchantment extends Enchantment
             destroySpeed /= 5.0F;
         }
 
-        if(!player.func_233570_aj_())
+        //if(!player.func_233570_aj_())
+        if(!player.isOnGround())
         {
             destroySpeed /= 5.0F;
         }
