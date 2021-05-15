@@ -117,7 +117,7 @@ public class SeederEnchantment extends Enchantment
                     }
 
                     drops.forEach(drop -> Block.spawnAsEntity(world, pos, drop));
-                    state.spawnAdditionalDrops(world, pos, ItemStack.EMPTY);
+                    state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
                     world.setBlockState(pos, Blocks.AIR.getDefaultState());
 
                     if(!pos.equals(originalPos))

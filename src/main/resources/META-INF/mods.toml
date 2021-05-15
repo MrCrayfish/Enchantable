@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[34,)"
+license="GPL3"
 
 [[mods]]
 modId="enchantable"
@@ -15,12 +16,12 @@ description="Adds new balanced enchantments that extend improve the vanilla game
 [[dependencies.enchantable]]
     modId="forge"
     mandatory=true
-    versionRange="[32,)"
+    versionRange="[34,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.enchantable]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.1]"
+    versionRange="[1.16.3,]"
     ordering="NONE"
     side="BOTH"

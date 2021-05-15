@@ -118,7 +118,7 @@ public class StompingEnchantment extends Enchantment
                                 /* Spawns particles and plays a stomp sound at the location of the living entity */
                                 if(livingEntity.world instanceof ServerWorld)
                                 {
-                                    BlockState state = livingEntity.world.getBlockState(livingEntity.func_233580_cy_() /*getPosition()*/.down());
+                                    BlockState state = livingEntity.world.getBlockState(livingEntity.getPosition().down());
                                     ServerWorld serverWorld = (ServerWorld) livingEntity.world;
                                     serverWorld.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), 50, 0, 0, 0, 0.15F);
                                     serverWorld.playSound(null, livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), ModSounds.ENTITY_PLAYER_STOMP, SoundCategory.PLAYERS, 1.0F, 1.0F);
