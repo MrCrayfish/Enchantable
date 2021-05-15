@@ -1,17 +1,16 @@
 modLoader="javafml"
 loaderVersion="[34,)"
-license="All Rights Reserved"
+license="GPLv3"
 
 [[mods]]
 modId="enchantable"
 version="1.4.0"
 displayName="Enchantable"
 updateJSONURL="https://raw.githubusercontent.com/MrCrayfish/MiniMods/enchantable/update.json"
-displayURL="https://mrcrayfish.com/minimods"
+displayURL="https://mrcrayfish.com/mods?id=enchantable"
 logoFile="enchantable.png"
-#credits=""
 authors="MrCrayfish"
-description="Adds new balanced enchantments that extend improve the vanilla game"
+description="Enchantable is a mod that brings new and balanced enchantments to the game! It expands on aspects of the game where no vanilla enchantments provides benifits but also adds new functionality to existing gameplay. The enchantments are designed to not be overpowered to keep the vanilla feel. Currently Enchantable adds four new enchantments but more will be added over time!"
 itemIcon="minecraft:enchanted_book"
 configBackground="minecraft:textures/block/spruce_planks.png"
 
