@@ -312,10 +312,17 @@ public class ExcavatorEnchantment extends Enchantment
 
     public static boolean isToolEffective(Set<ToolType> toolTypes, BlockState state, PlayerEntity player, World world, BlockPos pos)
     {
+        if(state.getBlockHardness(world, pos) <= 0)
+        {
+            return false;
+        }
         if(toolTypes.stream().noneMatch(toolType -> state.getBlock().isToolEffective(state, toolType)))
         {
-            //if(state.getMaterial().isToolNotRequired())
-            if (state.getHarvestTool() != null)
+            if(state.getMaterial().isReplaceable())
+            {
+                return false;
+            }
+            if(state.getHarvestTool() != null)
             {
                 return false;
             }
