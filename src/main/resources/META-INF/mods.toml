@@ -4,7 +4,7 @@ license="GPLv3"
 
 [[mods]]
 modId="enchantable"
-version="1.4.0"
+version="1.4.1"
 displayName="Enchantable"
 updateJSONURL="https://mrcrayfish.com/modupdatejson?id=enchantable"
 displayURL="https://mrcrayfish.com/mods?id=enchantable"
